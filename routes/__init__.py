@@ -1,1 +1,1 @@
-from .pizzas import PIZZA_BLUEPRINT
+from .pizza import PIZZA_BLUEPRINT
