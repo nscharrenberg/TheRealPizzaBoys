@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify
 
-from models import Pizza
+from dtos.pizza_dto import PizzaDto
+from models.model import Pizza
 
 PREFIX = "pizzas"
 
@@ -9,6 +10,8 @@ PIZZA_BLUEPRINT = Blueprint(PREFIX, __name__)
 
 @PIZZA_BLUEPRINT.route('/', methods=['GET'])
 def get_all():
-    return jsonify({
-        "pizzas": Pizza.query.all()
-    })
+    formatter = PizzaDto(many=True);
+    pizzas = Pizza.query.all()
+    response = formatter.dumps(pizzas)
+
+    return response.data

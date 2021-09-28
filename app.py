@@ -1,4 +1,6 @@
 from flask import Flask
+from flask_marshmallow import Marshmallow
+
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask.blueprints import Blueprint
@@ -6,6 +8,7 @@ from flask.blueprints import Blueprint
 app = Flask(__name__)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
+ma = Marshmallow(app)
 
 import routes
 
