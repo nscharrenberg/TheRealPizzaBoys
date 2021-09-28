@@ -4,7 +4,7 @@ from app import db
 class Topping(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False)
-    is_veggy = db.Column(db.Boolean, default=False)
+    is_veggie = db.Column(db.Boolean, default=False)
     price = db.Column(db.Numeric, default=0.00)
     pizzas = db.relationship('PizzaTopping', backref='topping')
 
@@ -12,7 +12,7 @@ class Topping(db.Model):
 class Pizza(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False)
-    is_veggy = db.Column(db.Boolean, default=False)
+    is_veggie = db.Column(db.Boolean, default=False)
     price = db.Column(db.Numeric, default=0.00)
     toppings = db.relationship('PizzaTopping', backref='pizza')
     orders = db.relationship('OrderedPizza', backref='pizza')
