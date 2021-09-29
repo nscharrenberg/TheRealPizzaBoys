@@ -1,5 +1,5 @@
 from app import ma
-from models.model import Pizza
+from models.sqlite_model import Pizza
 
 
 class PizzaDto(ma.SQLAlchemySchema):

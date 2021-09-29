@@ -1,5 +1,5 @@
 from app import ma
-from models.model import Topping
+from models.sqlite_model import Topping
 
 
 class SimpleToppingDto(ma.SQLAlchemyAutoSchema):

@@ -1,6 +1,6 @@
 from flask import jsonify
 
-from models.model import Pizza, Item
+from models.sqlite_model import Pizza, Item
 
 
 class MenuController():

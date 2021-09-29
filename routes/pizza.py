@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify
 
 from dtos.pizza_dto import PizzaDto
-from models.model import Pizza
+from models.sqlite_model import Pizza
 
 PREFIX = "pizzas"
 

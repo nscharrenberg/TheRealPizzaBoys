@@ -1,5 +1,10 @@
-from app import db
+import app
+from flask_sqlalchemy import SQLAlchemy
+from pathlib import Path
 
+Path("db").mkdir(parents=True, exist_ok=True)
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db/real_pizza_boys.db"
+db = SQLAlchemy(app)
 
 class Topping(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -96,3 +101,5 @@ class OrderedPizza(db.Model):
     pizza_id = db.Column(db.Integer, db.ForeignKey('pizza.id'))
     order_id = db.Column(db.Integer, db.ForeignKey('order.id'))
     quantity = db.Column(db.Integer, default=1)
+
+db.create_all()
