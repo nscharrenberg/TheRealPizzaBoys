@@ -1,22 +1,47 @@
-from flask import Flask
-from flask_marshmallow import Marshmallow
-
+from flask import Flask, render_template, make_response, request
 from config import Config
-from flask_sqlalchemy import SQLAlchemy
-from flask.blueprints import Blueprint
+from controllers import menu_controller
 
 app = Flask(__name__)
-app.config.from_object(Config)
-db = SQLAlchemy(app)
-ma = Marshmallow(app)
 
-import routes
 
-for blueprint in vars(routes).values():
-    if isinstance(blueprint, Blueprint):
-        app.register_blueprint(blueprint, url_prefix=Config.API_PREFIX + "/" + blueprint.name)
+@app.route("/login", methods=["GET"])
+def login_screen():
+    return render_template("Login.html")
 
-db.create_all()
 
-if __name__ == '__main__':
-    app.run(host=Config.HOST, port=Config.PORT)
+@app.route("/login", methods=["POST"])
+def login():
+    # TODO: Login logic connect to authentification system
+    email = request.form["email"]
+    password = request.form["password"]
+    return make_response({"result": "success"}, 200);
+
+
+@app.route("/register", methods=["GET"])
+def register_screen():
+    return render_template("Register.html")
+
+
+@app.route("/register", methods=["POST"])
+def register():
+    # TODO: Register logic connect to authentification system
+    first_name = request.form["first_name"]
+    last_name = request.form["last_name"]
+    phone_number = request.form["phone_number"]
+    birthday = request.form["birthday"]
+    street = request.form["street"]
+    addition = request.form["addition"]
+    zip_code = request.form["zip_code"]
+    city_name = request.form["city_name"]
+    return make_response({"result": "success"}, 200);
+
+
+@app.route("/order", methods=["GET"])
+def show_menu():
+    return render_template("Order.html", menu=menu_controller.get_menu())
+
+@app.route("/order", methods=["POST"])
+def place_order():
+    # TODO: Create logic and view for placing orders
+    return make_response({"result": "success"}, 200);

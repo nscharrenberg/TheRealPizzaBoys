@@ -3,14 +3,12 @@ from flask import jsonify
 from models.sqlite_model import Pizza, Item
 
 
-class MenuController():
-    @staticmethod
-    def get_menu():
-        pizzas = Pizza.query.all()
-        items = Item.query.all()
+def get_menu():
+    pizzas = Pizza.query.all()
+    items = Item.query.all()
 
-        return jsonify({
-            "Pizzas":pizzas,
-            "Items":items
-        })
+    return jsonify({"Pizzas":pizzas,"Items":items})
+
+def create_order():
+    pass
 
