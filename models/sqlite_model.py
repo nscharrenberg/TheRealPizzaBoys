@@ -63,6 +63,7 @@ class District(db.Model):
     __tablename__ = "districts"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     zip_code = db.Column(db.String(255), nullable=False, primary_key=True)
+    # TODO needs relation to courier
 
     def __init__(self, zip_code):
         # TODO: idk what about id
@@ -111,6 +112,7 @@ class Courier(db.Model):
     __tablename__ = "couriers"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(255), nullable=False)
+    # TODO needs relation with district
 
     def __init__(self, name):
         # TODO: idk what about id
