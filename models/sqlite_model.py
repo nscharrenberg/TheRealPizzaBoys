@@ -33,11 +33,18 @@ class Pizza(db.Model):
     toppings = db.relationship('PizzaTopping', backref='pizza')
     orders = db.relationship('OrderedPizza', backref='pizza')
 
-    def __init__(self, name, is_veggie, price, toppings):
+    def __init__(self, name, toppings):
         self.name = name
-        self.is_veggie = is_veggie
-        self.price = price
-        self.toppings = toppings
+        self.is_veggie = True
+        self.price = 0
+        for t in toppings:
+            price = t.price
+            if not t.is_veggie:
+                self.is_veggie = False
+
+        self.price = self.price * 1.4 # 40 % margin of profit
+        self.price = self.price * 1.09 # 9 % VAT
+        self.price = round(self.price, 1)
 
 class OrderStatus(db.Model):
     __tablename__ = "order_statuses"
@@ -91,6 +98,8 @@ class Customer(db.Model):
     birthday = db.Column(db.Date, nullable=True)
     amount_ordered = db.Column(db.Integer, nullable=False) # had to add because of reqs, is gonna be increased with every order, if amount%10 = 0, the user get´s a discount code
     discounts = relationship("Discount")
+    email = db.Column(db.String(255), nullable=False)
+    password = db.Column(db.String(255), nullable=False)
 
     def __init__(self, first_name, last_name, phone_number, address_id, birthday):
         self.first_name = first_name
@@ -107,8 +116,9 @@ class Courier(db.Model):
     name = db.Column(db.String(255), nullable=False)
     district_id = db.Column(db.Integer, db.ForeignKey('districts.id'))
 
-    def __init__(self, name):
+    def __init__(self, name, district_id):
         self.name = name
+        self.district_id = district_id
 
 
 class Discount(db.Model):
@@ -148,10 +158,9 @@ class Item(db.Model):
     price = db.Column(db.Numeric, default=0.00)
     orders = db.relationship('OrderedItem', backref='item')
 
-    def __init__(self, name, price, orders):
+    def __init__(self, name, price):
         self.name = name
         self.price = price
-        self.orders = orders
 
 class PizzaTopping(db.Model):
     __tablename__ = "pizza_topping"
