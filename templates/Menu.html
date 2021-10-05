@@ -71,9 +71,11 @@
         <p class="u-text u-text-2">Authentic handmade pizza's. Totally not made in a chinese factory.</p>
         <div class="u-expanded-width-xs u-list u-list-1">
           <div class="u-repeater u-repeater-1">
-            <div class="u-container-style u-list-item u-repeater-item u-white u-list-item-1">
+              {% for menuItem in menu.Pizzas %}
+
+                  <div class="u-container-style u-list-item u-repeater-item u-white u-list-item-1">
               <div class="u-container-layout u-similar-container u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xl u-container-layout-1">
-                <img alt="" class="u-expanded-width-xs u-image u-image-default u-image-1" src="../static/images/39814171.jpg">
+                <img alt="" class="u-expanded-width-xs u-image u-image-default u-image-1" src="https://picsum.photos/seed/picsum/200/300">
                 <div class="u-align-left-xs u-container-style u-expanded-width-xs u-group u-video-cover u-group-1">
                   <div class="u-container-layout u-valign-middle-xs u-container-layout-2">
                     <h3 class="u-custom-font u-font-oswald u-text u-text-3">Original</h3>
@@ -84,45 +86,12 @@
                 </div>
               </div>
             </div>
-            <div class="u-container-style u-list-item u-repeater-item u-video-cover u-white u-list-item-2">
-              <div class="u-container-layout u-similar-container u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xl u-container-layout-3">
-                <img alt="" class="u-expanded-width-xs u-image u-image-default u-image-2" src="../static/images/ground-classic-italian-pizza-with-tomatoes-pepper-vegetables-sauce-mozarella-cheese-dark-kitchen-table-copy-space_90380-9471.jpg">
-                <div class="u-align-left-xs u-container-style u-expanded-width-xs u-group u-video-cover u-group-2">
-                  <div class="u-container-layout u-valign-middle-xl u-valign-middle-xs u-container-layout-4">
-                    <h3 class="u-custom-font u-font-oswald u-text u-text-6">Salami</h3>
-                    <p class="u-text u-text-default u-text-7">Tomato sauce, mozzarella &amp; mild salami</p>
-                    <h6 class="u-text u-text-palette-3-base u-text-8">$15.00</h6>
-                    <a href="https://nicepage.com/html-templates" class="u-btn u-btn-rectangle u-button-style u-grey-10 u-btn-2">add to cart</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="u-container-style u-list-item u-repeater-item u-video-cover u-white u-list-item-3">
-              <div class="u-container-layout u-similar-container u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xl u-container-layout-5">
-                <img alt="" class="u-expanded-width-xs u-image u-image-default u-image-3" src="../static/images/mixed-pizza-with-olive-bell-pepper-tomato_140725-1831.jpg">
-                <div class="u-container-style u-expanded-width-xs u-group u-video-cover u-group-3">
-                  <div class="u-container-layout u-valign-middle-xl u-valign-middle-xs u-container-layout-6">
-                    <h3 class="u-custom-font u-font-oswald u-text u-text-9">Chicken</h3>
-                    <p class="u-text u-text-default u-text-10">Tomato sauce, mozzarella, chicken, pineapple* &amp; bbq sauce</p>
-                    <h6 class="u-text u-text-palette-3-base u-text-11">$25.00</h6>
-                    <a href="https://nicepage.com/css-templates" class="u-btn u-btn-rectangle u-button-style u-grey-10 u-btn-3">add to cart</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="u-container-style u-list-item u-repeater-item u-video-cover u-white u-list-item-4">
-              <div class="u-container-layout u-similar-container u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xl u-container-layout-7">
-                <img alt="" class="u-expanded-width-xs u-image u-image-default u-image-4" src="../static/images/sdw1.jpg">
-                <div class="u-container-style u-expanded-width-xs u-group u-video-cover u-group-4">
-                  <div class="u-container-layout u-valign-middle-xl u-valign-middle-xs u-container-layout-8">
-                    <h3 class="u-custom-font u-font-oswald u-text u-text-12">Hawaiian</h3>
-                    <p class="u-text u-text-default u-text-13">Tomato sauce, mozzarella, ham &amp; pineapple</p>
-                    <h6 class="u-text u-text-palette-3-base u-text-14">$16.00</h6>
-                    <a href="https://nicepage.com/website-mockup" class="u-btn u-btn-rectangle u-button-style u-grey-10 u-btn-4">add to cart</a>
-                  </div>
-                </div>
-              </div>
-            </div>
+
+              {% endfor %}
+
+
+
+
           </div>
         </div>
       </div>

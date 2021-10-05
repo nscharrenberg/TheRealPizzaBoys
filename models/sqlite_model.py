@@ -67,7 +67,7 @@ class District(db.Model):
     __tablename__ = "districts"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     zip_code = db.Column(db.String(255), nullable=False, primary_key=True)
-    couriers = db.relationship('Courier', backref='district_id')
+    couriers = db.relationship('Courier', backref='district')
 
     def __init__(self, zip_code):
         self.zip_code = zip_code
