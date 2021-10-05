@@ -17,12 +17,11 @@ class Topping(db.Model):
     price = db.Column(db.Numeric, default=0.00)
     pizzas = db.relationship('PizzaTopping', backref='topping')
 
-    def __init__(self, name, is_veggie, price, pizzas):
-        # TODO: idk what about id
+    def __init__(self, name, is_veggie, price):
         self.name = name
         self.is_veggie = is_veggie
         self.price = price
-        # TODO: idk what about pizzas relation
+        # pizzas can be nullable
 
 
 class Pizza(db.Model):
@@ -34,13 +33,11 @@ class Pizza(db.Model):
     toppings = db.relationship('PizzaTopping', backref='pizza')
     orders = db.relationship('OrderedPizza', backref='pizza')
 
-    def __init__(self, name, is_veggie, price):
-        # TODO: idk what about id
+    def __init__(self, name, is_veggie, price, toppings):
         self.name = name
         self.is_veggie = is_veggie
         self.price = price
-        # TODO: idk what about pizzas relation
-        # TODO: idk what about orders relation
+        self.toppings = toppings
 
 class OrderStatus(db.Model):
     __tablename__ = "order_statuses"
@@ -51,7 +48,6 @@ class OrderStatus(db.Model):
     order_id = db.Column(db.Integer, db.ForeignKey('orders.id'), nullable=False)
 
     def __init__(self, status, ordered_at, delivered_at,order_id):
-        # TODO: idk what about id
         self.status = status
         self.ordered_at = ordered_at
         self.delivered_at = delivered_at
@@ -63,10 +59,9 @@ class District(db.Model):
     __tablename__ = "districts"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     zip_code = db.Column(db.String(255), nullable=False, primary_key=True)
-    # TODO needs relation to courier
+    couriers = db.relationship('Courier', backref='district_id')
 
     def __init__(self, zip_code):
-        # TODO: idk what about id
         self.zip_code = zip_code
 
 class Address(db.Model):
@@ -79,7 +74,6 @@ class Address(db.Model):
     city = db.Column(db.String(255), nullable=False)
 
     def __init__(self, street, house_number, addition, zip_code, city):
-        # TODO: idk what about id
         self.street = street
         self.house_number = house_number
         self.addition = addition
@@ -99,7 +93,6 @@ class Customer(db.Model):
     discounts = relationship("Discount")
 
     def __init__(self, first_name, last_name, phone_number, address_id, birthday):
-        # TODO: idk what about id
         self.first_name = first_name
         self.last_name = last_name
         self.phone_number = phone_number
@@ -112,10 +105,9 @@ class Courier(db.Model):
     __tablename__ = "couriers"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(255), nullable=False)
-    # TODO needs relation with district
+    district_id = db.Column(db.Integer, db.ForeignKey('districts.id'))
 
     def __init__(self, name):
-        # TODO: idk what about id
         self.name = name
 
 
@@ -127,7 +119,6 @@ class Discount(db.Model):
     user_id = db.Column(db.Integer, ForeignKey('customers.id'))
 
     def __init__(self, code, is_used, user_id):
-        # TODO: idk what about id
         self.code = code
         self.is_used = is_used
         self.user_id = user_id
@@ -144,7 +135,6 @@ class Order(db.Model):
     items = db.relationship('OrderedItem', backref='order')
 
     def __init__(self, customer_id, courier_id, status_id, discount_code):
-        # TODO: idk what about id
         self.customer_id = customer_id
         self.courier_id = courier_id
         self.status_id = status_id
@@ -159,7 +149,6 @@ class Item(db.Model):
     orders = db.relationship('OrderedItem', backref='item')
 
     def __init__(self, name, price, orders):
-        # TODO: idk what about id
         self.name = name
         self.price = price
         self.orders = orders
@@ -173,7 +162,6 @@ class PizzaTopping(db.Model):
 
     def __init__(self):
         pass
-    # TODO: idk here
 
 
 class OrderedItem(db.Model):
@@ -185,7 +173,6 @@ class OrderedItem(db.Model):
 
     def __init__(self):
         pass
-    # TODO: idk what to do here
 
 
 class OrderedPizza(db.Model):
@@ -197,5 +184,4 @@ class OrderedPizza(db.Model):
 
     def __init__(self):
         pass
-    # TODO: idk what to do here
 db.create_all()
