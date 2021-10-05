@@ -10,6 +10,11 @@ def home():
     return render_template("Home.html")
 
 
+@app.route("/contact", methods=["GET"])
+def contact():
+    return render_template("Contact.html")
+
+
 @app.route("/login", methods=["GET"])
 def login_screen():
     return render_template("Login.html")
@@ -65,7 +70,7 @@ def show_order():
 
 
 @app.route("/order/confirmation", methods=["GET"])
-def show_order():
+def show_order_confirm():
     # TODO: Order Confirmation screen instead of Order screen
     return render_template("Order.html", order=[])
 

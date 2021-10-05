@@ -79,7 +79,7 @@ class Address(db.Model):
     street = db.Column(db.String(255), nullable=False)
     house_number = db.Column(db.Integer, nullable=False)
     addition = db.Column(db.String(255), nullable=False)
-    zip_code = db.Column(db.Integer, db.ForeignKey('districts.zip_code'), nullable=False)
+    zip_code = db.Column(db.Integer, db.ForeignKey('districts.id'), nullable=False)
     city = db.Column(db.String(255), nullable=False)
 
     def __init__(self, street, house_number, addition, zip_code, city):
