@@ -5,6 +5,11 @@ from controllers import menu_controller
 app = Flask(__name__)
 
 
+@app.route("/", methods=["GET"])
+def home():
+    return render_template("Home.html")
+
+
 @app.route("/login", methods=["GET"])
 def login_screen():
     return render_template("Login.html")
@@ -15,7 +20,7 @@ def login():
     # TODO: Login logic connect to authentification system
     email = request.form["email"]
     password = request.form["password"]
-    return make_response({"result": "success"}, 200);
+    return make_response({"result": "success"}, 200)
 
 
 @app.route("/register", methods=["GET"])
@@ -34,14 +39,44 @@ def register():
     addition = request.form["addition"]
     zip_code = request.form["zip_code"]
     city_name = request.form["city_name"]
-    return make_response({"result": "success"}, 200);
+    return make_response({"result": "success"}, 200)
+
+
+@app.route("/menu", methods=["GET"])
+def show_menu():
+    return render_template("Menu.html", menu=menu_controller.get_menu())
+
+
+@app.route("/card", methods=["POST"])
+def add_to_card():
+    # TODO: Create logic and adding to card
+    return make_response({"result": "success"}, 200)
+
+@app.route("/card", methods=["DELETE"])
+def remove_from_card():
+    # TODO: Create logic and remove from card
+    return make_response({"result": "success"}, 200)
 
 
 @app.route("/order", methods=["GET"])
-def show_menu():
-    return render_template("Order.html", menu=menu_controller.get_menu())
+def show_order():
+    return render_template("Order.html", order=[])
+
+@app.route("/order/confirmation", methods=["GET"])
+def show_order():
+    # TODO: Order Confirmation screen instead of Order screen
+    return render_template("Order.html", order=[])
+
 
 @app.route("/order", methods=["POST"])
 def place_order():
     # TODO: Create logic and view for placing orders
-    return make_response({"result": "success"}, 200);
+    return make_response({"result": "success"}, 200)
+
+@app.route("/order/cancel", methods=["PUT"])
+def cancel_order():
+    # TODO: Create logic and view for placing orders
+    return make_response({"result": "success"}, 200)
+
+
+
