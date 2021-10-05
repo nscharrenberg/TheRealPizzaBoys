@@ -4594,6 +4594,7 @@ ol {
 .u-btn {
   /*display: inline-block;*/
   display: table;
+  /*TODO maye need another solution for negative marin*/
   cursor: pointer;
   color: inherit;
   font-size: inherit;
@@ -34672,26 +34673,10 @@ a.u-link.u-text-hover-grey-90:hover {
   width: 417px;
   margin: 49px auto;
 }
-@media (max-width: 1199px) {
-  .u-footer .u-sheet-1 {
-    min-height: 99px;
-  }
-}
-@media (max-width: 991px) {
-  .u-footer .u-sheet-1 {
-    min-height: 76px;
-  }
-}
-@media (max-width: 767px) {
-  .u-footer .u-sheet-1 {
-    min-height: 57px;
-  }
-}
-@media (max-width: 575px) {
-  .u-footer .u-sheet-1 {
-    min-height: 36px;
-  }
 
+
+
+@media (max-width: 575px) {
   .u-footer .u-text-1 {
     width: 340px;
   }
