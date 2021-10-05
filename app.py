@@ -1,8 +1,8 @@
 from flask import Flask, render_template, make_response, request
-from config import Config
-from controllers import menu_controller
 
 app = Flask(__name__)
+
+from controllers import menu_controller
 
 
 @app.route("/", methods=["GET"])
@@ -52,6 +52,7 @@ def add_to_card():
     # TODO: Create logic and adding to card
     return make_response({"result": "success"}, 200)
 
+
 @app.route("/card", methods=["DELETE"])
 def remove_from_card():
     # TODO: Create logic and remove from card
@@ -61,6 +62,7 @@ def remove_from_card():
 @app.route("/order", methods=["GET"])
 def show_order():
     return render_template("Order.html", order=[])
+
 
 @app.route("/order/confirmation", methods=["GET"])
 def show_order():
@@ -73,10 +75,8 @@ def place_order():
     # TODO: Create logic and view for placing orders
     return make_response({"result": "success"}, 200)
 
+
 @app.route("/order/cancel", methods=["PUT"])
 def cancel_order():
     # TODO: Create logic and view for placing orders
     return make_response({"result": "success"}, 200)
-
-
-

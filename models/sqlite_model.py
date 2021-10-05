@@ -1,13 +1,14 @@
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
 
-import app
+from app import app
 from flask_sqlalchemy import SQLAlchemy
-from pathlib import Path
 
-Path("db").mkdir(parents=True, exist_ok=True)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db/real_pizza_boys.db"
+from config import Config
+
+app.config["SQLALCHEMY_DATABASE_URI"] = Config.SQLALCHEMY_DATABASE_URI
 db = SQLAlchemy(app)
+
 
 class Topping(db.Model):
     __tablename__ = "toppings"
@@ -42,9 +43,10 @@ class Pizza(db.Model):
             if not t.is_veggie:
                 self.is_veggie = False
 
-        self.price = self.price * 1.4 # 40 % margin of profit
-        self.price = self.price * 1.09 # 9 % VAT
+        self.price = self.price * 1.4  # 40 % margin of profit
+        self.price = self.price * 1.09  # 9 % VAT
         self.price = round(self.price, 1)
+
 
 class OrderStatus(db.Model):
     __tablename__ = "order_statuses"
@@ -54,12 +56,11 @@ class OrderStatus(db.Model):
     delivered_at = db.Column(db.DateTime)
     order_id = db.Column(db.Integer, db.ForeignKey('orders.id'), nullable=False)
 
-    def __init__(self, status, ordered_at, delivered_at,order_id):
+    def __init__(self, status, ordered_at, delivered_at, order_id):
         self.status = status
         self.ordered_at = ordered_at
         self.delivered_at = delivered_at
         self.order_id = order_id
-
 
 
 class District(db.Model):
@@ -70,6 +71,7 @@ class District(db.Model):
 
     def __init__(self, zip_code):
         self.zip_code = zip_code
+
 
 class Address(db.Model):
     __tablename__ = "addresses"
@@ -96,7 +98,8 @@ class Customer(db.Model):
     phone_number = db.Column(db.Numeric)
     address_id = db.Column(db.Integer, db.ForeignKey('addresses.id'), nullable=False)
     birthday = db.Column(db.Date, nullable=True)
-    amount_ordered = db.Column(db.Integer, nullable=False) # had to add because of reqs, is gonna be increased with every order, if amount%10 = 0, the user get´s a discount code
+    amount_ordered = db.Column(db.Integer,
+                               nullable=False)  # had to add because of reqs, is gonna be increased with every order, if amount%10 = 0, the user get´s a discount code
     discounts = relationship("Discount")
     email = db.Column(db.String(255), nullable=False)
     password = db.Column(db.String(255), nullable=False)
@@ -162,6 +165,7 @@ class Item(db.Model):
         self.name = name
         self.price = price
 
+
 class PizzaTopping(db.Model):
     __tablename__ = "pizza_topping"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -193,4 +197,6 @@ class OrderedPizza(db.Model):
 
     def __init__(self):
         pass
+
+
 db.create_all()
