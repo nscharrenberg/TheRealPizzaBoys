@@ -47,6 +47,8 @@
 </li><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="contact" style="padding: 10px 20px;">Contact</a>
                 {% if current_user.is_authenticated %}
                   Logged In as {{ current_user.email }}!
+                    <li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="logout" style="padding: 10px 20px;">Logout</a>
+                    </li>
                 {% else %}
                     <li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="login" style="padding: 10px 20px;">Login</a>
                     </li><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="register" style="padding: 10px 20px;">Register</a></li>
@@ -88,18 +90,14 @@
                   <h3 class="u-align-center-lg u-align-center-md u-align-center-xl u-text u-text-default u-text-1">Welcome</h3>
                   <div class="u-image u-image-circle u-image-2" data-image-width="2000" data-image-height="1333"></div>
                   <div class="u-expanded-width-xs u-form u-login-control u-form-1">
-                    <form action="#" method="POST" class="u-clearfix u-form-custom-backend u-form-spacing-15 u-form-vertical u-inner-form" source="custom" name="form-3" style="padding: 0px;">
+                    <form action="/login" method="POST" class="u-clearfix u-form-custom-backend u-form-spacing-15 u-form-vertical u-inner-form" name="form-3" style="padding: 0px;">
                       <div class="u-form-group u-form-name">
-                        <label for="username-5b0a" class="u-form-control-hidden u-label"></label>
-                        <input type="text" placeholder="Enter your Username" id="username-5b0a" name="username" class="u-border-2 u-border-black u-border-no-left u-border-no-right u-border-no-top u-input u-input-rectangle" required="">
+                        <label for="email-5b0a" class="u-form-control-hidden u-label"></label>
+                        <input type="text" placeholder="Enter your Username" id="email-5b0a" name="email" class="u-border-2 u-border-black u-border-no-left u-border-no-right u-border-no-top u-input u-input-rectangle" required="">
                       </div>
                       <div class="u-form-group u-form-password">
                         <label for="password-5b0a" class="u-form-control-hidden u-label"></label>
-                        <input type="text" placeholder="Enter your Password" id="password-5b0a" name="password" class="u-border-2 u-border-black u-border-no-left u-border-no-right u-border-no-top u-input u-input-rectangle" required="">
-                      </div>
-                      <div class="u-form-checkbox u-form-group">
-                        <input type="checkbox" id="checkbox-5b0a" name="remember" value="On">
-                        <label for="checkbox-5b0a" class="u-label">Remember me</label>
+                        <input type="password" placeholder="Enter your Password" id="password-5b0a" name="password" class="u-border-2 u-border-black u-border-no-left u-border-no-right u-border-no-top u-input u-input-rectangle" required="">
                       </div>
                       <div class="u-align-center u-form-group u-form-submit">
                         <a href="#" class="u-active-palette-1-light-1 u-border-none u-btn u-btn-round u-btn-submit u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-50 u-text-body-alt-color u-btn-1">Login</a>

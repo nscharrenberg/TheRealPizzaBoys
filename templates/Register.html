@@ -46,6 +46,8 @@
 </li><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="contact" style="padding: 10px 20px;">Contact</a>
                 {% if current_user.is_authenticated %}
                   Logged In as {{ current_user.email }}!
+                    <li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="logout" style="padding: 10px 20px;">Logout</a>
+                    </li>
                 {% else %}
                     <li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="login" style="padding: 10px 20px;">Login</a>
                     </li><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="register" style="padding: 10px 20px;">Register</a></li>
@@ -72,53 +74,61 @@
     <section class="u-clearfix u-section-1" id="sec-576d">
       <div class="u-clearfix u-sheet u-sheet-1">
         <div class="u-expanded-width u-form u-form-1">
-          <form action="#" method="POST" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" source="custom" name="form" style="padding: 10px;">
+          <form action="/register" method="POST" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" name="form-3" style="padding: 10px;">
             <div class="u-form-group u-form-name">
-              <label for="name-99ea" class="u-form-control-hidden u-label"></label>
-              <input type="text" placeholder="First Name" id="name-99ea" name="name" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="">
+              <label for="first-name-99ea" class="u-form-control-hidden u-label"></label>
+              <input type="text" placeholder="First Name" id="first-name-99ea" name="first_name" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="">
             </div>
-            <div class="u-form-email u-form-group">
+
+              <div class="u-form-group u-form-name">
+              <label for="last-name-99ea" class="u-form-control-hidden u-label"></label>
+              <input type="text" placeholder="Lastname Name" id="last-name-99ea" name="last_name" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="">
+            </div>
+
+              <div class="u-form-group u-form-name">
               <label for="email-99ea" class="u-form-control-hidden u-label"></label>
-              <input type="email" placeholder="Last name" id="email-99ea" name="name-1" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="">
+              <input type="text" placeholder="Email" id="email-99ea" name="email" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="">
             </div>
-            <div class="u-form-group u-form-group-3">
-              <label for="text-5cc7" class="u-form-control-hidden u-label"></label>
-              <input type="text" placeholder="email" id="text-5cc7" name="email" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="required">
+
+              <div class="u-form-group u-form-name">
+              <label for="password-99ea" class="u-form-control-hidden u-label"></label>
+              <input type="password" placeholder="Password" id="password-99ea" name="password" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="">
             </div>
-            <div class="u-form-group u-form-group-4">
-              <label for="text-dd79" class="u-form-control-hidden u-label"></label>
-              <input type="text" id="text-dd79" name="phone_number" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" placeholder="Phone number" required="required">
+
+              <div class="u-form-group u-form-name">
+              <label for="phone_number-99ea" class="u-form-control-hidden u-label"></label>
+              <input type="text" placeholder="Phone number" id="phone_number-99ea" name="phone_number" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="">
             </div>
-            <div class="u-form-group u-form-group-5">
-              <label for="text-a270" class="u-label">Birthday</label>
-              <input type="text" placeholder="dd/mm/yyy" id="text-a270" name="birthday" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="required">
+
+              <div class="u-form-group u-form-name">
+              <label for="street-99ea" class="u-form-control-hidden u-label"></label>
+              <input type="text" placeholder="Street" id="street-99ea" name="street" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="">
             </div>
-            <div class="u-form-group u-form-group-6">
-              <label for="text-66bc" class="u-label">Address</label>
-              <input type="text" placeholder="Street name" id="text-66bc" name="street" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="required">
+
+              <div class="u-form-group u-form-name">
+              <label for="house_number-99ea" class="u-form-control-hidden u-label"></label>
+              <input type="text" placeholder="House Number" id="house_number-99ea" name="house_number" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="">
             </div>
-            <div class="u-form-group u-form-group-7">
-              <label for="text-eca6" class="u-form-control-hidden u-label"></label>
-              <input type="text" placeholder="Housenumber" id="text-eca6" name="house_number" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="required">
+
+              <div class="u-form-group u-form-name">
+              <label for="addition-99ea" class="u-form-control-hidden u-label"></label>
+              <input type="text" placeholder="Addition" id="addition-99ea" name="addition" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white">
             </div>
-            <div class="u-form-group u-form-group-8">
-              <label for="text-f19a" class="u-form-control-hidden u-label"></label>
-              <input type="text" placeholder="Addition" id="text-f19a" name="addition" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white">
+
+              <div class="u-form-group u-form-name">
+              <label for="zipcode-99ea" class="u-form-control-hidden u-label"></label>
+              <input type="text" placeholder="Zipcode" id="zipcode-99ea" name="zipcode" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="">
             </div>
-            <div class="u-form-group u-form-group-9">
-              <label for="text-b8c9" class="u-form-control-hidden u-label"></label>
-              <input type="text" placeholder="ZIP" id="text-b8c9" name="zip_code" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="required">
+
+              <div class="u-form-group u-form-name">
+              <label for="city-99ea" class="u-form-control-hidden u-label"></label>
+              <input type="text" placeholder="City" id="city-99ea" name="city" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="">
             </div>
-            <div class="u-form-group u-form-group-10">
-              <label for="text-f0cf" class="u-form-control-hidden u-label"></label>
-              <input type="text" placeholder="City name" id="text-f0cf" name="city_name" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="required">
-            </div>
+
             <div class="u-align-left u-form-group u-form-submit">
               <a href="#" class="u-btn u-btn-submit u-button-style">Submit</a>
               <input type="submit" value="submit" class="u-form-control-hidden">
             </div>
-            <div class="u-form-send-message u-form-send-success"> Thank you! Your message has been sent. </div>
-            <div class="u-form-send-error u-form-send-message"> Unable to send your message. Please fix errors then try again. </div>
             <input type="hidden" value="" name="recaptchaResponse">
           </form>
         </div>

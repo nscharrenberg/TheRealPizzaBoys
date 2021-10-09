@@ -1,5 +1,6 @@
 import decimal
 
+import flask_login
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
 
@@ -69,7 +70,7 @@ class OrderStatus(db.Model):
 class District(db.Model):
     __tablename__ = "districts"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    zip_code = db.Column(db.String(255), nullable=False, primary_key=True)
+    zip_code = db.Column(db.String(255), nullable=False, primary_key=True, unique=True)
     couriers = db.relationship('Courier', backref='district')
 
     def __init__(self, zip_code):
@@ -93,26 +94,24 @@ class Address(db.Model):
         self.city = city
 
 
-class Customer(db.Model):
+class Customer(flask_login.UserMixin, db.Model):
     __tablename__ = "customers"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     first_name = db.Column(db.String(255), nullable=False)
     last_name = db.Column(db.String(255), nullable=False)
     phone_number = db.Column(db.Numeric)
     address_id = db.Column(db.Integer, db.ForeignKey('addresses.id'), nullable=False)
-    birthday = db.Column(db.Date, nullable=True)
     amount_ordered = db.Column(db.Integer,
                                nullable=False)  # had to add because of reqs, is gonna be increased with every order, if amount%10 = 0, the user get´s a discount code
     discounts = relationship("Discount")
-    email = db.Column(db.String(255), nullable=False)
+    email = db.Column(db.String(255), nullable=False, primary_key=True)
     password = db.Column(db.String(255), nullable=False)
 
-    def __init__(self, first_name, last_name, phone_number, address_id, birthday, email, password):
+    def __init__(self, first_name, last_name, phone_number, address_id, email, password):
         self.first_name = first_name
         self.last_name = last_name
         self.phone_number = phone_number
         self.address_id = address_id
-        self.birthday = birthday
         self.amount_ordered = 0
         self.email = email
         self.password = password  # not the best practice, but probably dont really care about it for this usecase.

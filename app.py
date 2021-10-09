@@ -6,13 +6,15 @@ app = Flask(__name__)
 app.secret_key = 'topsecretkeythatonlyweknow'  # would usually store this as an environmental variable
 
 login_manager = flask_login.LoginManager()
+login_manager.login_view = "login"
 login_manager.init_app(app)
 
 from models.sqlite_model import Customer
 
+
 @login_manager.user_loader
-def user_loader(email):
-    user = Customer.query.filter_by(email=email).first()
+def user_loader(id):
+    user = Customer.query.filter_by(id=id).first()
 
     if user is None:
         return
@@ -52,16 +54,11 @@ def login_screen():
 @app.route("/login", methods=["POST"])
 def login():
     try:
-        customer = customer_controller.register(request.form['first_name'], request.form['last_name'],
-                                                request.form['phone_number'], request.form['birthday'],
-                                                request.form['email'],
-                                                request.form['password'], request.form['street'],
-                                                request.form['house_number'],
-                                                request.form['addition'], request.form['zipcode'],
-                                                request.form['city'])
+        customer = customer_controller.login(request.form['email'],
+                                             request.form['password'])
 
         flask_login.login_user(customer)
-        return flask.redirect(flask.url_for('home'))
+        return flask.redirect('/menu')
     except Exception as ex:
         return make_response(ex, 500)
 
@@ -73,19 +70,15 @@ def register_screen():
 
 @app.route("/register", methods=["POST"])
 def register():
-    try:
-        customer = customer_controller.register(request.form['first_name'], request.form['last_name'],
-                                                request.form['phone_number'], request.form['birthday'],
-                                                request.form['email'],
-                                                request.form['password'], request.form['street'],
-                                                request.form['house_number'],
-                                                request.form['addition'], request.form['zipcode'],
-                                                request.form['city'])
+    customer_controller.register(request.form['first_name'], request.form['last_name'],
+                                 request.form['phone_number'],
+                                 request.form['email'],
+                                 request.form['password'], request.form['street'],
+                                 request.form['house_number'],
+                                 request.form['addition'], request.form['zipcode'],
+                                 request.form['city'])
 
-        flask_login.login_user(customer)
-        return flask.redirect(flask.url_for('home'))
-    except Exception as ex:
-        return make_response(ex, 500)
+    return flask.redirect('/menu')
 
 
 @app.route("/menu", methods=["GET"])
@@ -147,7 +140,9 @@ def protected():
 @app.route('/logout', methods=['GET'])
 @flask_login.login_required
 def logout():
+    flask_login.logout_user()
     return flask.redirect(flask.url_for('home'))
+
 
 @login_manager.unauthorized_handler
 def unauthorized_handler():
