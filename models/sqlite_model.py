@@ -18,7 +18,7 @@ class Topping(db.Model):
     name = db.Column(db.String(255), nullable=False)
     is_veggie = db.Column(db.Boolean, default=False)
     price = db.Column(db.Numeric(10, 2), default=0.00)
-    pizzas = db.relationship('PizzaTopping', backref='toppings')
+    pizzas = db.relationship('PizzaTopping', backref='topping')
 
     def __init__(self, name, is_veggie, price):
         self.name = name
@@ -33,7 +33,7 @@ class Pizza(db.Model):
     name = db.Column(db.String(255), nullable=False)
     is_veggie = db.Column(db.Boolean, default=False)
     price = db.Column(db.Numeric(10, 2), default=0.00)
-    toppings = db.relationship('PizzaTopping', backref='pizzas')
+    toppings = db.relationship('PizzaTopping', backref='pizza')
     orders = db.relationship('OrderedPizza', backref='pizzas')
 
     def __init__(self, name, toppings):
@@ -160,7 +160,7 @@ class Item(db.Model):
     __tablename__ = "items"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(255), nullable=False)
-    price = db.Column(db.Numeric, default=0.00)
+    price = db.Column(db.Numeric(10, 2), default=0.00)
     orders = db.relationship('OrderedItem', backref='item')
 
     def __init__(self, name, price):

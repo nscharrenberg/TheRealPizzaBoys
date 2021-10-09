@@ -1,11 +1,10 @@
-from flask import jsonify
-
 from models.sqlite_model import Pizza, db, PizzaTopping
 
 
 def create_pizza(name, toppings):
     pizza = Pizza(name, toppings)
     db.session.add(pizza)
+    db.session.commit()
 
     new_toppings = dict()
     for topping in toppings:

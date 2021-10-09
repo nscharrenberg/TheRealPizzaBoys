@@ -79,10 +79,10 @@
                     <img alt="" class="u-expanded-width-xs u-image u-image-default u-image-1" src="https://picsum.photos/seed/picsum/200/300">
                     <div class="u-align-left-xs u-container-style u-expanded-width-xs u-group u-video-cover u-group-1">
                       <div class="u-container-layout u-valign-middle-xs u-container-layout-2">
-                        <h3 class="u-custom-font u-font-oswald u-text u-text-3">{{ pizza.name }}</h3>
+                        <h3 class="u-custom-font u-font-oswald u-text u-text-3">{{ pizza.name }} {{ '(Veggie)' if pizza.is_veggie else '' }}</h3>
                         <p class="u-text u-text-4">
-                            {% for ingredient in pizza.ingedients %}
-                                {{ ingredient }},
+                            {% for ingredient in pizza.toppings %}
+                                {{ ingredient.topping.name }},
                             {% endfor %}
                         </p>
                         <h6 class="u-text u-text-palette-3-base u-text-5">&euro; {{ pizza.price }}</h6>
@@ -104,9 +104,8 @@
                 <img alt="" class="u-expanded-width-xs u-image u-image-default u-image-1" src="https://picsum.photos/seed/picsum/200/300">
                 <div class="u-align-left-xs u-container-style u-expanded-width-xs u-group u-video-cover u-group-1">
                   <div class="u-container-layout u-valign-middle-xs u-container-layout-2">
-                    <h3 class="u-custom-font u-font-oswald u-text u-text-3">Original</h3>
-                    <p class="u-text u-text-4">Tomato sauce, mozzarella &amp; oregano</p>
-                    <h6 class="u-text u-text-palette-3-base u-text-5">$18.00</h6>
+                    <h3 class="u-custom-font u-font-oswald u-text u-text-3">{{ item.name }}</h3>
+                    <h6 class="u-text u-text-palette-3-base u-text-5">&euro; {{ item.price }}</h6>
                     <a href="https://nicepage.com/website-design" class="u-btn u-btn-rectangle u-button-style u-grey-10 u-btn-1">add to cart</a>
                   </div>
                 </div>
