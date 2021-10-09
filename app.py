@@ -1,9 +1,37 @@
+import flask
+import flask_login
 from flask import Flask, render_template, make_response, request
 
 app = Flask(__name__)
+app.secret_key = 'topsecretkeythatonlyweknow'  # would usually store this as an environmental variable
 
-from controllers import menu_controller, add_pizzas
+login_manager = flask_login.LoginManager()
+login_manager.init_app(app)
 
+from models.sqlite_model import Customer
+
+@login_manager.user_loader
+def user_loader(email):
+    user = Customer.query.filter_by(email=email).first()
+
+    if user is None:
+        return
+
+    return user
+
+
+@login_manager.request_loader
+def request_loader(request):
+    email = request.form.get('email')
+    user = Customer.query.filter_by(email=email).first()
+
+    if user is None:
+        return
+
+    return user
+
+
+from controllers import menu_controller, add_pizzas, customer_controller
 
 
 @app.route("/", methods=["GET"])
@@ -23,10 +51,19 @@ def login_screen():
 
 @app.route("/login", methods=["POST"])
 def login():
-    # TODO: Login logic connect to authentification system
-    email = request.form["email"]
-    password = request.form["password"]
-    return make_response({"result": "success"}, 200)
+    try:
+        customer = customer_controller.register(request.form['first_name'], request.form['last_name'],
+                                                request.form['phone_number'], request.form['birthday'],
+                                                request.form['email'],
+                                                request.form['password'], request.form['street'],
+                                                request.form['house_number'],
+                                                request.form['addition'], request.form['zipcode'],
+                                                request.form['city'])
+
+        flask_login.login_user(customer)
+        return flask.redirect(flask.url_for('home'))
+    except Exception as ex:
+        return make_response(ex, 500)
 
 
 @app.route("/register", methods=["GET"])
@@ -36,16 +73,19 @@ def register_screen():
 
 @app.route("/register", methods=["POST"])
 def register():
-    # TODO: Register logic connect to authentification system
-    first_name = request.form["first_name"]
-    last_name = request.form["last_name"]
-    phone_number = request.form["phone_number"]
-    birthday = request.form["birthday"]
-    street = request.form["street"]
-    addition = request.form["addition"]
-    zip_code = request.form["zip_code"]
-    city_name = request.form["city_name"]
-    return make_response({"result": "success"}, 200)
+    try:
+        customer = customer_controller.register(request.form['first_name'], request.form['last_name'],
+                                                request.form['phone_number'], request.form['birthday'],
+                                                request.form['email'],
+                                                request.form['password'], request.form['street'],
+                                                request.form['house_number'],
+                                                request.form['addition'], request.form['zipcode'],
+                                                request.form['city'])
+
+        flask_login.login_user(customer)
+        return flask.redirect(flask.url_for('home'))
+    except Exception as ex:
+        return make_response(ex, 500)
 
 
 @app.route("/menu", methods=["GET"])
@@ -66,28 +106,49 @@ def remove_from_card():
 
 
 @app.route("/order", methods=["GET"])
+@flask_login.login_required
 def show_order():
     return render_template("Order.html", order=[])
 
 
 @app.route("/order/confirmation", methods=["GET"])
+@flask_login.login_required
 def show_order_confirm():
     # TODO: Order Confirmation screen instead of Order screen
     return render_template("Order.html", order=[])
 
 
 @app.route("/order", methods=["POST"])
+@flask_login.login_required
 def place_order():
     # TODO: Create logic and view for placing orders
     return make_response({"result": "success"}, 200)
 
 
 @app.route("/order/cancel", methods=["PUT"])
+@flask_login.login_required
 def cancel_order():
     # TODO: Create logic and view for placing orders
     return make_response({"result": "success"}, 200)
+
 
 @app.route("/migrate/seed", methods=["GET"])
 def seed():
     add_pizzas.add_everything()
     return make_response({"result": "success"}, 200)
+
+
+@app.route('/protected', methods=['GET'])
+@flask_login.login_required
+def protected():
+    return 'This is secret'
+
+
+@app.route('/logout', methods=['GET'])
+@flask_login.login_required
+def logout():
+    return flask.redirect(flask.url_for('home'))
+
+@login_manager.unauthorized_handler
+def unauthorized_handler():
+    return flask.redirect(flask.url_for('login'))

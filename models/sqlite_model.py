@@ -45,7 +45,8 @@ class Pizza(db.Model):
             if not t.is_veggie:
                 self.is_veggie = False
 
-        self.price = decimal.Decimal(self.price) * decimal.Decimal(1.4) * decimal.Decimal(1.09)  # 40 % margin of profit & 9% VAT
+        self.price = decimal.Decimal(self.price) * decimal.Decimal(1.4) * decimal.Decimal(
+            1.09)  # 40 % margin of profit & 9% VAT
         self.price = decimal.Decimal(self.price.quantize(decimal.Decimal('.01'), rounding=decimal.ROUND_HALF_UP))
         self.price = round(self.price, 1)
 
@@ -106,13 +107,15 @@ class Customer(db.Model):
     email = db.Column(db.String(255), nullable=False)
     password = db.Column(db.String(255), nullable=False)
 
-    def __init__(self, first_name, last_name, phone_number, address_id, birthday):
+    def __init__(self, first_name, last_name, phone_number, address_id, birthday, email, password):
         self.first_name = first_name
         self.last_name = last_name
         self.phone_number = phone_number
         self.address_id = address_id
         self.birthday = birthday
         self.amount_ordered = 0
+        self.email = email
+        self.password = password  # not the best practice, but probably dont really care about it for this usecase.
 
 
 class Courier(db.Model):
@@ -204,4 +207,3 @@ class OrderedPizza(db.Model):
 
 
 db.create_all()
-
