@@ -1,13 +1,34 @@
 import flask
 import flask_login
 from flask import Flask, render_template, make_response, request
+from flask_apscheduler import APScheduler
+from datetime import datetime
+from datetime import timedelta
 
 app = Flask(__name__)
 app.secret_key = 'topsecretkeythatonlyweknow'  # would usually store this as an environmental variable
-
+app.config['SCHEDULER_API_ENABLED'] = True
 login_manager = flask_login.LoginManager()
 login_manager.login_view = "login"
 login_manager.init_app(app)
+
+scheduler = APScheduler()
+scheduler.init_app(app)
+scheduler.start()
+
+from models.sqlite_model import Order, db
+
+
+@scheduler.task('interval', id='check_if_pizza_goes_out', seconds=5, misfire_grace_time=900)
+def check_if_pizza_goes_out():
+    current_date = datetime.now() - timedelta(minutes=5)
+    # Retrieve all orders older then 5 minutes that are still pending for delivery
+    orders = Order.query.filter(Order.ordered_at <= current_date, status='PENDING').all()
+
+    for order in orders:
+        order.status = 'ON_THE_WAY'
+        db.session.commit()
+
 
 from models.sqlite_model import Customer
 
