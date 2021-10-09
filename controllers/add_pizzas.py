@@ -1,9 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
 
 import app
-from models.sqlite_model import Courier, District, Pizza, Topping, Item
-
-db = SQLAlchemy(app)
+from models.sqlite_model import Courier, District, Pizza, Topping, Item, db
+from controllers.admin_controller import create_pizza
 
 
 # In this file all the important basis info is inserted into the db
@@ -15,6 +14,7 @@ def add_everything():
     add_items()
     add_districts()
     add_couriers()
+    db.session.commit()
 
 
 def add_districts():
@@ -57,25 +57,25 @@ def add_pizzas():
     olives = Topping.query.filter_by(name="Olives").first()
     jala = Topping.query.filter_by(name="Jalapeños").first()
 
-    db.session.add(Pizza("Pizza Margarita", {sauce, mozza, dough, oregano}))
-    db.session.add(Pizza("Pizza Salami", {sauce, mozza, dough, oregano, salami}))
-    db.session.add(Pizza("Pizza Prosciutto", {sauce, mozza, dough, oregano, ham}))
-    db.session.add(Pizza("Pizza 'Best Pizza of the world'", {sauce, mozza, dough, oregano, corn, jala, peppers}))
-    db.session.add(Pizza("Vegetarian Pizza", {sauce, mozza, dough, oregano, peppers, corn, mushroom}))
-    db.session.add(Pizza("Meatlovers Pizza", {sauce, mozza, dough, oregano, salami, salami, ham, sals, olives}))
-    db.session.add(Pizza("Pizza del Jefe", {sauce, mozza, dough, oregano, peppers, onions, sals}))
-    db.session.add(Pizza("Pizza della Casa",
-                         {sauce, mozza, dough, oregano, salami, ham, sals, onions, corn, peppers, garlic, mushroom,
-                          tuna, olives, jala}))
-    db.session.add(Pizza("Pizza Tonno", {sauce, mozza, dough, oregano, tuna}))
-    db.session.add(Pizza("Pizza Tonno e Cipolla", {sauce, mozza, dough, oregano, tuna, onions}))
-    db.session.add(Pizza("Pizza Tonno e Oliva", {sauce, mozza, dough, oregano, tuna, olives}))
-    db.session.add(Pizza("Pizza Databa$e", {sauce, mozza, dough, oregano, truffel}))
-    db.session.add(Pizza("Pizza Melano", {sauce, mozza, dough, oregano, gold, truffel}))
+    create_pizza("Pizza Margarita", {sauce, mozza, dough, oregano})
+    create_pizza("Pizza Salami", {sauce, mozza, dough, oregano, salami})
+    create_pizza("Pizza Prosciutto", {sauce, mozza, dough, oregano, ham})
+    create_pizza("Pizza 'Best Pizza of the world'", {sauce, mozza, dough, oregano, corn, jala, peppers})
+    create_pizza("Vegetarian Pizza", {sauce, mozza, dough, oregano, peppers, corn, mushroom})
+    create_pizza("Meatlovers Pizza", {sauce, mozza, dough, oregano, salami, salami, ham, sals, olives})
+    create_pizza("Pizza del Jefe", {sauce, mozza, dough, oregano, peppers, onions, sals})
+    create_pizza("Pizza della Casa",
+                 {sauce, mozza, dough, oregano, salami, ham, sals, onions, corn, peppers, garlic, mushroom,
+                  tuna, olives, jala})
+    create_pizza("Pizza Tonno", {sauce, mozza, dough, oregano, tuna})
+    create_pizza("Pizza Tonno e Cipolla", {sauce, mozza, dough, oregano, tuna, onions})
+    create_pizza("Pizza Tonno e Oliva", {sauce, mozza, dough, oregano, tuna, olives})
+    create_pizza("Pizza Databa$e", {sauce, mozza, dough, oregano, truffel})
+    create_pizza("Pizza Melano", {sauce, mozza, dough, oregano, gold, truffel})
 
 
 def add_toppings():
-    db.session.add(Topping("Marinara sauce", True, 1.0))
+    db.session.add(Topping("Marinara sauce", True, 1.13))
     db.session.add(Topping("Mozzarella", True, 2.5))
     db.session.add(Topping("Dough", True, 1.5))
     db.session.add(Topping("Oregano", True, 0.5))
@@ -119,4 +119,3 @@ def add_items():
     db.session.add(Item("Tiramisu", 5.5))
     db.session.add(Item("Limoncello", 2.0))
     db.session.add(Item("Chocolate Cake", 3.0))
-

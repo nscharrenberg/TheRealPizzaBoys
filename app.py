@@ -2,7 +2,8 @@ from flask import Flask, render_template, make_response, request
 
 app = Flask(__name__)
 
-from controllers import menu_controller
+from controllers import menu_controller, add_pizzas
+
 
 
 @app.route("/", methods=["GET"])
@@ -49,7 +50,7 @@ def register():
 
 @app.route("/menu", methods=["GET"])
 def show_menu():
-    return render_template("Menu.html", menu=menu_controller.get_menu())
+    return render_template("Menu.html", pizzas=menu_controller.get_pizzas(), items=menu_controller.get_items())
 
 
 @app.route("/card", methods=["POST"])
@@ -84,4 +85,9 @@ def place_order():
 @app.route("/order/cancel", methods=["PUT"])
 def cancel_order():
     # TODO: Create logic and view for placing orders
+    return make_response({"result": "success"}, 200)
+
+@app.route("/migrate/seed", methods=["GET"])
+def seed():
+    add_pizzas.add_everything()
     return make_response({"result": "success"}, 200)
