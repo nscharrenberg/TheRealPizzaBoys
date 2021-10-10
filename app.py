@@ -25,7 +25,18 @@ def check_if_pizza_goes_out():
     order_statuses = OrderStatus.query.filter(OrderStatus.ordered_at <= current_date, OrderStatus.status == 1).all()
 
     for status in order_statuses:
-        status.status = 1
+        status.status = 2
+        db.session.commit()
+
+
+@scheduler.task('interval', id='deliver_pizza', minutes=1, misfire_grace_time=900)
+def check_if_pizza_goes_out():
+    current_date = datetime.now() - timedelta(minutes=15)
+
+    order_statuses = OrderStatus.query.filter(OrderStatus.ordered_at <= current_date).all()
+
+    for status in order_statuses:
+        status.status = 3
         db.session.commit()
 
 
