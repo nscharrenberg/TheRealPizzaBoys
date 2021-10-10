@@ -124,16 +124,17 @@ def add_to_card():
     return flask.redirect('menu')
 
 
-@app.route("/card", methods=["DELETE"])
+@app.route("/card-delete", methods=["POST"])
 def remove_from_card():
-    # TODO: Create logic and remove from card
-    return make_response({"result": "success"}, 200)
+    menu_controller.remove_pizza_to_card(flask_login.current_user, request.form['pizza_id'])
+    return flask.redirect('menu')
 
 
 @app.route("/order", methods=["GET"])
 @flask_login.login_required
 def show_order():
-    return render_template("Order.html", order=[])
+    order = Order.query.filter(Order.customer_id == flask_login.current_user.id, Order.status.any(OrderStatus.status == 0)).first()
+    return render_template("Order.html", order=order)
 
 
 @app.route("/order/confirmation", methods=["GET"])

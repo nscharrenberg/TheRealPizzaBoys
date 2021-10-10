@@ -35,7 +35,7 @@ class Pizza(db.Model):
     is_veggie = db.Column(db.Boolean, default=False)
     price = db.Column(db.Numeric(10, 2), default=0.00)
     toppings = db.relationship('PizzaTopping', backref='pizza')
-    orders = db.relationship('OrderedPizza', backref='pizzas')
+    orders = db.relationship('OrderedPizza', backref='pizza')
 
     def __init__(self, name, toppings):
         self.name = name
@@ -150,9 +150,9 @@ class Order(db.Model):
     courier_id = db.Column(db.Integer, db.ForeignKey('couriers.id'))
     status_id = db.Column(db.Integer, db.ForeignKey('order_statuses.id'))
     discount_code = db.Column(db.String(255), db.ForeignKey('discounts.code'))
-    pizzas = db.relationship('OrderedPizza', backref='order')
-    items = db.relationship('OrderedItem', backref='order')
-    status = relationship("OrderStatus", foreign_keys='OrderStatus.order_id', backref=backref("order", uselist=False))
+    pizzas = db.relationship('OrderedPizza', backref='order', cascade="all, delete-orphan")
+    items = db.relationship('OrderedItem', backref='order', cascade="all, delete-orphan")
+    status = relationship("OrderStatus", foreign_keys='OrderStatus.order_id', backref=backref("order", uselist=False), cascade="all, delete-orphan")
 
     def __init__(self, customer_id, status_id):
         self.customer_id = customer_id

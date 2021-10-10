@@ -9,6 +9,23 @@ def get_pizzas():
 def get_items():
     return Item.query.all()
 
+def remove_pizza_to_card(customer, pizza):
+    order = Order.query.filter(Order.customer_id == customer.id, Order.status.any(OrderStatus.status == 0)).first()
+
+    if order is None:
+        return
+
+    order_pizza = OrderedPizza.query.filter_by(pizza_id=pizza, order_id=order.id).first()
+
+    if order_pizza is None:
+        return
+
+    if order_pizza.quantity == 1:
+        db.session.delete(order_pizza)
+        db.session.commit()
+
+    order_pizza.quantity = order_pizza.quantity - 1
+    db.session.commit()
 
 def add_pizza_to_card(customer, pizza):
     order = Order.query.filter(Order.customer_id == customer.id, Order.status.any(OrderStatus.status == 0)).first()

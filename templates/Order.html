@@ -96,30 +96,25 @@
               </tr>
             </thead>
             <tbody class="u-table-body">
+            {% for order in order.pizzas %}
               <tr style="height: 75px;">
-                <td class="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">Original</td>
-                <td class="u-border-1 u-border-grey-30 u-table-cell">1</td>
-                <td class="u-border-1 u-border-grey-30 u-table-cell">8</td>
-                <td class="u-border-1 u-border-grey-30 u-table-cell"><span class="u-icon u-icon-1"><svg class="u-svg-content" viewBox="0 0 448 448" style="width: 1em; height: 1em;"><path d="m408 184h-136c-4.417969 0-8-3.582031-8-8v-136c0-22.089844-17.910156-40-40-40s-40 17.910156-40 40v136c0 4.417969-3.582031 8-8 8h-136c-22.089844 0-40 17.910156-40 40s17.910156 40 40 40h136c4.417969 0 8 3.582031 8 8v136c0 22.089844 17.910156 40 40 40s40-17.910156 40-40v-136c0-4.417969 3.582031-8 8-8h136c22.089844 0 40-17.910156 40-40s-17.910156-40-40-40zm0 0"></path></svg><img></span> &nbsp;&nbsp;<span class="u-icon u-icon-2"><svg class="u-svg-content" viewBox="0 0 124 124" x="0px" y="0px" style="width: 1em; height: 1em;"><g><path d="M112,50H12C5.4,50,0,55.4,0,62c0,6.6,5.4,12,12,12h100c6.6,0,12-5.4,12-12C124,55.4,118.6,50,112,50z"></path>
-</g></svg><img></span>
+                <td class="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">{{ order.pizza.name }}</td>
+                <td class="u-border-1 u-border-grey-30 u-table-cell">{{ order.quantity }}</td>
+                <td class="u-border-1 u-border-grey-30 u-table-cell">{{ order.pizza.price * order.quantity }}</td>
+                <td class="u-border-1 u-border-grey-30 u-table-cell">
+                    <form action="/card" method="post">
+                        <button name="pizza_id" value="{{ order.pizza.id }}">
+                            <span class="u-icon u-icon-1"><svg class="u-svg-content" viewBox="0 0 448 448" style="width: 1em; height: 1em;"><path d="m408 184h-136c-4.417969 0-8-3.582031-8-8v-136c0-22.089844-17.910156-40-40-40s-40 17.910156-40 40v136c0 4.417969-3.582031 8-8 8h-136c-22.089844 0-40 17.910156-40 40s17.910156 40 40 40h136c4.417969 0 8 3.582031 8 8v136c0 22.089844 17.910156 40 40 40s40-17.910156 40-40v-136c0-4.417969 3.582031-8 8-8h136c22.089844 0 40-17.910156 40-40s-17.910156-40-40-40zm0 0"></path></svg><img></span> &nbsp;&nbsp;
+                        </button>
+                    </form>
+                    <form action="/card-delete" method="post">
+                        <button name="pizza_id" value="{{ order.pizza.id }}">
+                            <span class="u-icon u-icon-2"><svg class="u-svg-content" viewBox="0 0 124 124" x="0px" y="0px" style="width: 1em; height: 1em;"><g><path d="M112,50H12C5.4,50,0,55.4,0,62c0,6.6,5.4,12,12,12h100c6.6,0,12-5.4,12-12C124,55.4,118.6,50,112,50z"></path></g></svg><img></span>
+                        </button>
+                    </form>
                 </td>
               </tr>
-              <tr style="height: 76px;">
-                <td class="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-9">Salami</td>
-                <td class="u-border-1 u-border-grey-30 u-table-cell">3</td>
-                <td class="u-border-1 u-border-grey-30 u-table-cell">10</td>
-                <td class="u-border-1 u-border-grey-30 u-table-cell"><span class="u-icon u-icon-3"><svg class="u-svg-content" viewBox="0 0 448 448" style="width: 1em; height: 1em;"><path d="m408 184h-136c-4.417969 0-8-3.582031-8-8v-136c0-22.089844-17.910156-40-40-40s-40 17.910156-40 40v136c0 4.417969-3.582031 8-8 8h-136c-22.089844 0-40 17.910156-40 40s17.910156 40 40 40h136c4.417969 0 8 3.582031 8 8v136c0 22.089844 17.910156 40 40 40s40-17.910156 40-40v-136c0-4.417969 3.582031-8 8-8h136c22.089844 0 40-17.910156 40-40s-17.910156-40-40-40zm0 0"></path></svg><img></span> &nbsp;&nbsp;<span class="u-icon u-icon-4"><svg class="u-svg-content" viewBox="0 0 124 124" x="0px" y="0px" style="width: 1em; height: 1em;"><g><path d="M112,50H12C5.4,50,0,55.4,0,62c0,6.6,5.4,12,12,12h100c6.6,0,12-5.4,12-12C124,55.4,118.6,50,112,50z"></path>
-</g></svg><img></span>
-                </td>
-              </tr>
-              <tr style="height: 76px;">
-                <td class="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-13">Tuna</td>
-                <td class="u-border-1 u-border-grey-30 u-table-cell">1</td>
-                <td class="u-border-1 u-border-grey-30 u-table-cell">10</td>
-                <td class="u-border-1 u-border-grey-30 u-table-cell"><span class="u-icon u-icon-5"><svg class="u-svg-content" viewBox="0 0 448 448" style="width: 1em; height: 1em;"><path d="m408 184h-136c-4.417969 0-8-3.582031-8-8v-136c0-22.089844-17.910156-40-40-40s-40 17.910156-40 40v136c0 4.417969-3.582031 8-8 8h-136c-22.089844 0-40 17.910156-40 40s17.910156 40 40 40h136c4.417969 0 8 3.582031 8 8v136c0 22.089844 17.910156 40 40 40s40-17.910156 40-40v-136c0-4.417969 3.582031-8 8-8h136c22.089844 0 40-17.910156 40-40s-17.910156-40-40-40zm0 0"></path></svg><img></span> &nbsp;&nbsp;<span class="u-icon u-icon-6"><svg class="u-svg-content" viewBox="0 0 124 124" x="0px" y="0px" style="width: 1em; height: 1em;"><g><path d="M112,50H12C5.4,50,0,55.4,0,62c0,6.6,5.4,12,12,12h100c6.6,0,12-5.4,12-12C124,55.4,118.6,50,112,50z"></path>
-</g></svg><img></span>
-                </td>
-              </tr>
+            {% endfor %}
             </tbody>
           </table>
         </div>
