@@ -55,7 +55,7 @@ class Pizza(db.Model):
 class OrderStatus(db.Model):
     __tablename__ = "order_statuses"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    status = db.Column(db.Integer) # 0 = ORDERING, 1 = PENDING, 2 = OUT_FOR_DELIVERY 3 = DELIVERED
+    status = db.Column(db.Integer) # 0 = ORDERING, 1 = PENDING, 2 = OUT_FOR_DELIVERY 3 = DELIVERED 4 = CANCELLED
     ordered_at = db.Column(db.DateTime)
     delivered_at = db.Column(db.DateTime)
     created_at = db.Column(db.DateTime)

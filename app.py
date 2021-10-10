@@ -187,11 +187,13 @@ def show_order_confirm(order_id):
     status = 'SHOPPING CART'
 
     if order_status == 1:
-        status = 'PREPARING'
+        status = 'IN PROGRESS'
     elif order_status == 2:
-        status = 'ON THE WAY'
+        status = 'OUT FOR DELIVERY'
     elif order_status == 3:
         status = 'DELIVERED'
+    elif order_status == 4:
+        status = 'CANCELLED'
 
     return render_template("OrderStatus.html", order=order, expected_delivery=exp_delivery, status=status)
 
