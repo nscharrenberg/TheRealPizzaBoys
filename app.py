@@ -32,10 +32,15 @@ def check_if_pizza_goes_out():
 @scheduler.task('interval', id='remove_old_unordered_orders', minutes=1, misfire_grace_time=900)
 def remove_old_unordered_orders():
     current_date = datetime.now() - timedelta(minutes=15)
+
     # Retrieve all orders older then 15 minutes that have not been officially ordered yet. (status 0)
     order_statuses = OrderStatus.query.filter(OrderStatus.created_at <= current_date, OrderStatus.status == 0).all()
 
+    if order_statuses is None:
+        return
+
     for status in order_statuses:
+        print(status.order)
         db.session.delete(status.order)
         db.session.commit()
 
@@ -163,7 +168,8 @@ def show_order_confirm():
 @app.route("/order", methods=["POST"])
 @flask_login.login_required
 def place_order():
-    # TODO: Create logic and view for placing orders
+    order = Order.query.filter(Order.customer_id == flask_login.current_user.id,
+                               Order.status.any(OrderStatus.status == 0)).first()
     return make_response({"result": "success"}, 200)
 
 

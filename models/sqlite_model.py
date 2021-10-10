@@ -148,11 +148,11 @@ class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     customer_id = db.Column(db.Integer, db.ForeignKey('customers.id'))
     courier_id = db.Column(db.Integer, db.ForeignKey('couriers.id'))
-    status_id = db.Column(db.Integer, db.ForeignKey('order_statuses.id'))
+    status_id = db.Column(db.Integer, db.ForeignKey('order_statuses.id', ondelete='CASCADE'))
     discount_code = db.Column(db.String(255), db.ForeignKey('discounts.code'))
-    pizzas = db.relationship('OrderedPizza', backref='order', cascade="all, delete-orphan")
-    items = db.relationship('OrderedItem', backref='order', cascade="all, delete-orphan")
-    status = relationship("OrderStatus", foreign_keys='OrderStatus.order_id', backref=backref("order", uselist=False), cascade="all, delete-orphan")
+    pizzas = db.relationship('OrderedPizza', backref='order', cascade="all, delete")
+    items = db.relationship('OrderedItem', backref='order', cascade="all, delete")
+    status = relationship("OrderStatus", foreign_keys='OrderStatus.order_id', backref=backref("order", uselist=False, cascade="all,delete"))
 
     def __init__(self, customer_id, status_id):
         self.customer_id = customer_id
