@@ -2,8 +2,7 @@ import flask
 import flask_login
 from flask import Flask, render_template, make_response, request
 from flask_apscheduler import APScheduler
-from datetime import datetime
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
 app.secret_key = 'topsecretkeythatonlyweknow'  # would usually store this as an environmental variable
@@ -34,7 +33,7 @@ def check_if_pizza_goes_out():
 def remove_old_unordered_orders():
     current_date = datetime.now() - timedelta(minutes=15)
     # Retrieve all orders older then 15 minutes that have not been officially ordered yet. (status 0)
-    order_statuses = OrderStatus.query.filter(OrderStatus.ordered_at <= current_date, OrderStatus.status == 0).all()
+    order_statuses = OrderStatus.query.filter(OrderStatus.created_at <= current_date, OrderStatus.status == 0).all()
 
     for status in order_statuses:
         db.session.delete(status.order)
@@ -119,9 +118,10 @@ def show_menu():
 
 
 @app.route("/card", methods=["POST"])
+@flask_login.login_required
 def add_to_card():
-    # TODO: Create logic and adding to card
-    return make_response({"result": "success"}, 200)
+    menu_controller.add_pizza_to_card(flask_login.current_user, request.form['pizza_id'])
+    return flask.redirect('menu')
 
 
 @app.route("/card", methods=["DELETE"])

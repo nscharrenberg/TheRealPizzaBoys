@@ -93,7 +93,15 @@
                             {% endfor %}
                         </p>
                         <h6 class="u-text u-text-palette-3-base u-text-5">&euro; {{ pizza.price }}</h6>
-                        <a href="https://nicepage.com/website-design" class="u-btn u-btn-rectangle u-button-style u-grey-10 u-btn-1">add to cart</a>
+                        {% if current_user.is_authenticated %}
+                          <form action="/card" method="post">
+                              <button class="u-btn u-btn-rectangle u-button-style u-grey-10 u-btn-1" name="pizza_id" value="{{ pizza.id }}">
+                                  Add to Cart
+                              </button>
+                          </form>
+                        {% else %}
+                            <a href="/login" class="u-btn u-btn-rectangle u-button-style u-grey-10 u-btn-1">Login to Order</a>
+                        {% endif %}
                       </div>
                     </div>
                   </div>

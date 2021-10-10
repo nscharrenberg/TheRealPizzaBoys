@@ -58,14 +58,15 @@ class OrderStatus(db.Model):
     status = db.Column(db.Integer) # 0 = ORDERING, 1 = PENDING, 2 = OUT_FOR_DELIVERY 3 = DELIVERED
     ordered_at = db.Column(db.DateTime)
     delivered_at = db.Column(db.DateTime)
+    created_at = db.Column(db.DateTime)
     order_id = db.Column(db.Integer, db.ForeignKey('orders.id'))
-    order = relationship("Order", foreign_keys='Order.status_id', backref=backref("status", uselist=False))
 
-    def __init__(self, status, ordered_at, delivered_at, order_id):
+    def __init__(self, status, created_at):
         self.status = status
-        self.ordered_at = ordered_at
-        self.delivered_at = delivered_at
-        self.order_id = order_id
+        self.created_at = created_at
+        self.ordered_at = None
+        self.delivered_at = None
+        self.order_id = None
 
 
 class District(db.Model):
@@ -151,12 +152,13 @@ class Order(db.Model):
     discount_code = db.Column(db.String(255), db.ForeignKey('discounts.code'))
     pizzas = db.relationship('OrderedPizza', backref='order')
     items = db.relationship('OrderedItem', backref='order')
+    status = relationship("OrderStatus", foreign_keys='OrderStatus.order_id', backref=backref("order", uselist=False))
 
-    def __init__(self, customer_id, courier_id, status_id, discount_code):
+    def __init__(self, customer_id, status_id):
         self.customer_id = customer_id
-        self.courier_id = courier_id
+        self.courier_id = None
         self.status_id = status_id
-        self.discount_code = discount_code
+        self.discount_code = None
 
 
 class Item(db.Model):
@@ -202,8 +204,9 @@ class OrderedPizza(db.Model):
     order_id = db.Column(db.Integer, db.ForeignKey('orders.id'))
     quantity = db.Column(db.Integer, default=1)
 
-    def __init__(self):
-        pass
+    def __init__(self, pizza_id, order_id):
+        self.pizza_id = pizza_id
+        self.order_id = order_id
 
 
 db.create_all()
