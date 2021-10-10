@@ -117,23 +117,39 @@ def show_menu():
     return render_template("Menu.html", pizzas=menu_controller.get_pizzas(), items=menu_controller.get_items())
 
 
-@app.route("/card", methods=["POST"])
+@app.route("/card-pizza-add", methods=["POST"])
 @flask_login.login_required
-def add_to_card():
+def add_pizza_to_card():
     menu_controller.add_pizza_to_card(flask_login.current_user, request.form['pizza_id'])
     return flask.redirect('menu')
 
 
-@app.route("/card-delete", methods=["POST"])
-def remove_from_card():
+@app.route("/card-pizza-delete", methods=["POST"])
+@flask_login.login_required
+def remove_pizza_from_card():
     menu_controller.remove_pizza_to_card(flask_login.current_user, request.form['pizza_id'])
+    return flask.redirect('menu')
+
+
+@app.route("/card-item-add", methods=["POST"])
+@flask_login.login_required
+def add_item_to_card():
+    menu_controller.add_item_to_card(flask_login.current_user, request.form['item_id'])
+    return flask.redirect('menu')
+
+
+@app.route("/card-item-delete", methods=["POST"])
+@flask_login.login_required
+def remove_item_from_card():
+    menu_controller.remove_item_to_card(flask_login.current_user, request.form['item_id'])
     return flask.redirect('menu')
 
 
 @app.route("/order", methods=["GET"])
 @flask_login.login_required
 def show_order():
-    order = Order.query.filter(Order.customer_id == flask_login.current_user.id, Order.status.any(OrderStatus.status == 0)).first()
+    order = Order.query.filter(Order.customer_id == flask_login.current_user.id,
+                               Order.status.any(OrderStatus.status == 0)).first()
     return render_template("Order.html", order=order)
 
 

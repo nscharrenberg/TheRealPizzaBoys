@@ -193,8 +193,9 @@ class OrderedItem(db.Model):
     order_id = db.Column(db.Integer, db.ForeignKey('orders.id'))
     quantity = db.Column(db.Integer, default=1)
 
-    def __init__(self):
-        pass
+    def __init__(self, item_id, order_id):
+        self.item_id = item_id
+        self.order_id = order_id
 
 
 class OrderedPizza(db.Model):
