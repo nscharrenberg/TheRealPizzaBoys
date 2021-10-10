@@ -7,10 +7,10 @@
     <meta name="description" content="">
     <meta name="page_type" content="np-template-header-footer-from-plugin">
     <title>Order</title>
-    <link rel="stylesheet" href="../static/nicepage.css" media="screen">
-<link rel="stylesheet" href="../static/Order.css" media="screen">
-    <script class="u-script" type="text/javascript" src="../static/jquery.js" defer=""></script>
-    <script class="u-script" type="text/javascript" src="../static/nicepage.js" defer=""></script>
+    <link rel="stylesheet" href="../../static/nicepage.css" media="screen">
+<link rel="stylesheet" href="../../static/Order.css" media="screen">
+    <script class="u-script" type="text/javascript" src="../../static/jquery.js" defer=""></script>
+    <script class="u-script" type="text/javascript" src="../../static/nicepage.js" defer=""></script>
     <meta name="generator" content="Nicepage 3.26.0, nicepage.com">
     <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i">
     
@@ -28,7 +28,7 @@
   </head>
   <body class="u-body"><header class="u-clearfix u-header u-header" id="sec-7ffa"><div class="u-clearfix u-sheet u-sheet-1">
         <a href="https://nicepage.com" class="u-image u-logo u-image-1" data-image-width="283" data-image-height="294">
-          <img src="../static/images/pizzaboys_logo.png" class="u-logo-image u-logo-image-1">
+          <img src="../../static/images/pizzaboys_logo.png" class="u-logo-image u-logo-image-1">
         </a>
         <nav class="u-menu u-menu-dropdown u-offcanvas u-menu-1">
           <div class="menu-collapse" style="font-size: 1rem; letter-spacing: 0px;">
@@ -74,7 +74,7 @@
       </div></header>
     <section class="u-align-center u-clearfix u-section-1" id="sec-a1fb">
       <div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
-        <h1 class="u-text u-text-default u-text-1">YOUR ORDER</h1>
+        <h1 class="u-text u-text-default u-text-1">ORDER #{{ order.id }}</h1>
       </div>
     </section>
     <section class="u-align-center u-clearfix u-section-2" id="sec-b807">
@@ -85,14 +85,12 @@
               <col width="25%">
               <col width="25%">
               <col width="25%">
-              <col width="25%">
             </colgroup>
             <thead class="u-palette-4-base u-table-header u-table-header-1">
               <tr style="height: 21px;">
                 <th class="u-border-1 u-border-palette-4-base u-table-cell">Pizza</th>
                 <th class="u-border-1 u-border-palette-4-base u-table-cell">Amount</th>
                 <th class="u-border-1 u-border-palette-4-base u-table-cell">Price</th>
-                <th class="u-border-1 u-border-palette-4-base u-table-cell">Action</th>
               </tr>
             </thead>
             <tbody class="u-table-body">
@@ -101,18 +99,6 @@
                 <td class="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">{{ order.pizza.name }}</td>
                 <td class="u-border-1 u-border-grey-30 u-table-cell">{{ order.quantity }}</td>
                 <td class="u-border-1 u-border-grey-30 u-table-cell">{{ order.pizza.price * order.quantity }}</td>
-                <td class="u-border-1 u-border-grey-30 u-table-cell">
-                    <form action="/card-pizza-add" method="post">
-                        <button name="pizza_id" value="{{ order.pizza.id }}">
-                            <span class="u-icon u-icon-1"><svg class="u-svg-content" viewBox="0 0 448 448" style="width: 1em; height: 1em;"><path d="m408 184h-136c-4.417969 0-8-3.582031-8-8v-136c0-22.089844-17.910156-40-40-40s-40 17.910156-40 40v136c0 4.417969-3.582031 8-8 8h-136c-22.089844 0-40 17.910156-40 40s17.910156 40 40 40h136c4.417969 0 8 3.582031 8 8v136c0 22.089844 17.910156 40 40 40s40-17.910156 40-40v-136c0-4.417969 3.582031-8 8-8h136c22.089844 0 40-17.910156 40-40s-17.910156-40-40-40zm0 0"></path></svg><img></span> &nbsp;&nbsp;
-                        </button>
-                    </form>
-                    <form action="/card-pizza-delete" method="post">
-                        <button name="pizza_id" value="{{ order.pizza.id }}">
-                            <span class="u-icon u-icon-2"><svg class="u-svg-content" viewBox="0 0 124 124" x="0px" y="0px" style="width: 1em; height: 1em;"><g><path d="M112,50H12C5.4,50,0,55.4,0,62c0,6.6,5.4,12,12,12h100c6.6,0,12-5.4,12-12C124,55.4,118.6,50,112,50z"></path></g></svg><img></span>
-                        </button>
-                    </form>
-                </td>
               </tr>
             {% endfor %}
             {% for order in order.items %}
@@ -120,26 +106,14 @@
                 <td class="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">{{ order.item.name }}</td>
                 <td class="u-border-1 u-border-grey-30 u-table-cell">{{ order.quantity }}</td>
                 <td class="u-border-1 u-border-grey-30 u-table-cell">{{ order.item.price * order.quantity }}</td>
-                <td class="u-border-1 u-border-grey-30 u-table-cell">
-                    <form action="/card-item-add" method="post">
-                        <button name="item_id" value="{{ order.item.id }}">
-                            <span class="u-icon u-icon-1"><svg class="u-svg-content" viewBox="0 0 448 448" style="width: 1em; height: 1em;"><path d="m408 184h-136c-4.417969 0-8-3.582031-8-8v-136c0-22.089844-17.910156-40-40-40s-40 17.910156-40 40v136c0 4.417969-3.582031 8-8 8h-136c-22.089844 0-40 17.910156-40 40s17.910156 40 40 40h136c4.417969 0 8 3.582031 8 8v136c0 22.089844 17.910156 40 40 40s40-17.910156 40-40v-136c0-4.417969 3.582031-8 8-8h136c22.089844 0 40-17.910156 40-40s-17.910156-40-40-40zm0 0"></path></svg><img></span> &nbsp;&nbsp;
-                        </button>
-                    </form>
-                    <form action="/card-item-delete" method="post">
-                        <button name="item_id" value="{{ order.item.id }}">
-                            <span class="u-icon u-icon-2"><svg class="u-svg-content" viewBox="0 0 124 124" x="0px" y="0px" style="width: 1em; height: 1em;"><g><path d="M112,50H12C5.4,50,0,55.4,0,62c0,6.6,5.4,12,12,12h100c6.6,0,12-5.4,12-12C124,55.4,118.6,50,112,50z"></path></g></svg><img></span>
-                        </button>
-                    </form>
-                </td>
               </tr>
             {% endfor %}
             </tbody>
           </table>
         </div>
 
-          <form action="/order" method="post">
-              <button class="u-btn u-button-style u-hover-palette-1-dark-1 u-palette-1-base u-btn-1">Place Order</button>
+          <form action="/order/cancel" method="post">
+              <button class="u-btn u-button-style u-hover-palette-1-dark-1 u-palette-1-base u-btn-1" name="order_id" value="{{ order.id }}">Cancel Order</button>
           </form>
       </div>
     </section>

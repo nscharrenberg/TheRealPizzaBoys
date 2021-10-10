@@ -40,7 +40,6 @@ def remove_old_unordered_orders():
         return
 
     for status in order_statuses:
-        print(status.order)
         db.session.delete(status.order)
         db.session.commit()
 
@@ -158,22 +157,41 @@ def show_order():
     return render_template("Order.html", order=order)
 
 
-@app.route("/order/confirmation", methods=["GET"])
+@app.route("/order/confirmation/<order_id>", methods=["GET"])
 @flask_login.login_required
-def show_order_confirm():
-    # TODO: Order Confirmation screen instead of Order screen
-    return render_template("Order.html", order=[])
+def show_order_confirm(order_id):
+    order = Order.query.get(order_id)
+
+    if order is None:
+        return flask.redirect('/order')
+
+    return render_template("OrderStatus.html", order=order)
 
 
 @app.route("/order", methods=["POST"])
 @flask_login.login_required
 def place_order():
-    order = Order.query.filter(Order.customer_id == flask_login.current_user.id,
-                               Order.status.any(OrderStatus.status == 0)).first()
-    return make_response({"result": "success"}, 200)
+    order_status = OrderStatus.query.filter(OrderStatus.status == 0, OrderStatus.order.has(
+        Order.customer_id == flask_login.current_user.id)).first()
+
+    if order_status.order.pizzas is None:
+        return flask.redirect('/order')
+
+    if len(order_status.order.pizzas) < 1:
+        return flask.redirect('/order')
+
+    order_status.status = 1
+
+    # TODO: Find a Courier for the district that is available
+
+    # TODO: Combine 2 orders if they're done within 5 minutes from each other
+
+    db.session.commit()
+
+    return flask.redirect('/order/confirmation/' + str(order_status.order_id))
 
 
-@app.route("/order/cancel", methods=["PUT"])
+@app.route("/order/cancel", methods=["POST"])
 @flask_login.login_required
 def cancel_order():
     # TODO: Create logic and view for placing orders
