@@ -165,7 +165,24 @@ def show_order_confirm(order_id):
     if order is None:
         return flask.redirect('/order')
 
-    return render_template("OrderStatus.html", order=order)
+    if order.status.ordered_at is None:
+        order.status.ordered_at = datetime.now()
+        db.session.commit()
+
+    exp_delivery = order.status.ordered_at + timedelta(minutes=15)
+
+    order_status = order.status.status
+
+    status = 'SHOPPING CART'
+
+    if order_status == 1:
+        status = 'PREPARING'
+    elif order_status == 2:
+        status = 'ON THE WAY'
+    elif order_status == 3:
+        status = 'DELIVERED'
+
+    return render_template("OrderStatus.html", order=order, expected_delivery=exp_delivery, status=status)
 
 
 @app.route("/order", methods=["POST"])
@@ -181,6 +198,7 @@ def place_order():
         return flask.redirect('/order')
 
     order_status.status = 1
+    order_status.ordered_at = datetime.now()
 
     # TODO: Find a Courier for the district that is available
 

@@ -68,6 +68,10 @@ class OrderStatus(db.Model):
         self.delivered_at = None
         self.order_id = None
 
+    def __repr__(self):
+        rep = 'OrderStatus(' + str(self.status) + ',' + str(self.ordered_at) + ',' + str(self.delivered_at) + ',' + str(self.order_id) + ')'
+        return rep
+
 
 class District(db.Model):
     __tablename__ = "districts"
@@ -152,7 +156,7 @@ class Order(db.Model):
     discount_code = db.Column(db.String(255), db.ForeignKey('discounts.code'))
     pizzas = db.relationship('OrderedPizza', backref='order', cascade="all, delete")
     items = db.relationship('OrderedItem', backref='order', cascade="all, delete")
-    status = relationship("OrderStatus", foreign_keys='OrderStatus.order_id', backref=backref("order", uselist=False, cascade="all,delete"))
+    status = relationship("OrderStatus", foreign_keys='OrderStatus.order_id', uselist=False, backref=backref("order", uselist=False, cascade="all,delete"))
 
     def __init__(self, customer_id, status_id):
         self.customer_id = customer_id
