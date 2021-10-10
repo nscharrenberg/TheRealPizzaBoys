@@ -2,7 +2,7 @@ import decimal
 
 import flask_login
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 
 from app import app
 from flask_sqlalchemy import SQLAlchemy
@@ -55,10 +55,11 @@ class Pizza(db.Model):
 class OrderStatus(db.Model):
     __tablename__ = "order_statuses"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    status = db.Column(db.Integer)
+    status = db.Column(db.Integer) # 0 = ORDERING, 1 = PENDING, 2 = OUT_FOR_DELIVERY 3 = DELIVERED
     ordered_at = db.Column(db.DateTime)
     delivered_at = db.Column(db.DateTime)
-    order_id = db.Column(db.Integer, db.ForeignKey('orders.id'), nullable=False)
+    order_id = db.Column(db.Integer, db.ForeignKey('orders.id'))
+    order = relationship("Order", foreign_keys='Order.status_id', backref=backref("status", uselist=False))
 
     def __init__(self, status, ordered_at, delivered_at, order_id):
         self.status = status
@@ -150,7 +151,6 @@ class Order(db.Model):
     discount_code = db.Column(db.String(255), db.ForeignKey('discounts.code'))
     pizzas = db.relationship('OrderedPizza', backref='order')
     items = db.relationship('OrderedItem', backref='order')
-    status = db.relationship('OrderStatus', backref='order')
 
     def __init__(self, customer_id, courier_id, status_id, discount_code):
         self.customer_id = customer_id

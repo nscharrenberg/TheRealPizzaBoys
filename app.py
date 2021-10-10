@@ -19,14 +19,25 @@ scheduler.start()
 from models.sqlite_model import Order, db, OrderStatus
 
 
-@scheduler.task('interval', id='check_if_pizza_goes_out', seconds=15, misfire_grace_time=900)
+@scheduler.task('interval', id='check_if_pizza_goes_out', minutes=1, misfire_grace_time=900)
 def check_if_pizza_goes_out():
     current_date = datetime.now() - timedelta(minutes=5)
-    # Retrieve all orders older then 5 minutes that are still pending for delivery
-    order_statuses = OrderStatus.query.filter(OrderStatus.ordered_at <= current_date, status=0).all()
+    # Retrieve all orders older then 5 minutes that are still pending for delivery (status 1)
+    order_statuses = OrderStatus.query.filter(OrderStatus.ordered_at <= current_date, OrderStatus.status == 1).all()
 
     for status in order_statuses:
         status.status = 1
+        db.session.commit()
+
+
+@scheduler.task('interval', id='remove_old_unordered_orders', minutes=1, misfire_grace_time=900)
+def remove_old_unordered_orders():
+    current_date = datetime.now() - timedelta(minutes=15)
+    # Retrieve all orders older then 15 minutes that have not been officially ordered yet. (status 0)
+    order_statuses = OrderStatus.query.filter(OrderStatus.ordered_at <= current_date, OrderStatus.status == 0).all()
+
+    for status in order_statuses:
+        db.session.delete(status.order)
         db.session.commit()
 
 
