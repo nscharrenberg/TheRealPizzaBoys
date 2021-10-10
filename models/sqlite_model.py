@@ -150,6 +150,7 @@ class Order(db.Model):
     discount_code = db.Column(db.String(255), db.ForeignKey('discounts.code'))
     pizzas = db.relationship('OrderedPizza', backref='order')
     items = db.relationship('OrderedItem', backref='order')
+    status = db.relationship('OrderStatus', backref='order')
 
     def __init__(self, customer_id, courier_id, status_id, discount_code):
         self.customer_id = customer_id
