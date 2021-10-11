@@ -22,10 +22,10 @@ scheduler.start()
 
 from models.mysql_model import Order, db, OrderStatus, District, Address, Courier, Discount, Pizza
 
-
+DELIVERY_TIME = 30
 @scheduler.task('interval', id='check_if_pizza_goes_out', seconds=10, misfire_grace_time=900)
 def check_if_pizza_goes_out():
-    current_date = datetime.now() - timedelta(seconds=30)
+    current_date = datetime.now() - timedelta(seconds=DELIVERY_TIME)
     # Retrieve all orders older then 5 minutes that are still pending for delivery (status 1)
     order_statuses = OrderStatus.query.filter(OrderStatus.ordered_at <= current_date, OrderStatus.status == 1).all()
 
@@ -249,8 +249,15 @@ def place_order():
 @app.route("/order/cancel", methods=["POST"])
 @flask_login.login_required
 def cancel_order():
-    # TODO: Create logic and view for placing orders
-    return make_response({"result": "success"}, 200)
+    order_id = request.form['order_id']
+    # check if order was placed less than 5 minutes ago
+    current_date = datetime.now()
+    order_status = OrderStatus.query.filter(OrderStatus.ordered_at + timedelta(seconds=DELIVERY_TIME) >= current_date, OrderStatus.order_id == order_id).first()
+    if order_status is not None:
+        order_status.status = 4
+        db.session.commit()
+
+    return flask.redirect(flask.url_for('show_order'))
 
 
 @app.route("/migrate/seed", methods=["GET"])
