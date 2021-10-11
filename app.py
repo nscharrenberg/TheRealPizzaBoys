@@ -301,7 +301,7 @@ def unauthorized_handler():
 def assign_delivery_person(status):
     # Give order to delivery person
     customer_address_id = Customer.query.filter(Customer.id == status.order.customer_id).first().address_id
-    customer_zipcode_id = Address.query.filter(Address.id == customer_address_id).first().zip_code
+    customer_zipcode_id = Address.query.filter(Address.id == customer_address_id).first().district_id
     # list of all delivery people for the district
     delivery_people_from_district = Courier.query.filter(Courier.district_id == customer_zipcode_id).all()
     for p in delivery_people_from_district:
@@ -311,7 +311,7 @@ def assign_delivery_person(status):
             # they are not busy
             status.order.courier_id = p.id
             unassigned_orders = Order.query.filter(
-                Order.customer.has(Address.zip_code == status.order.customer.address.zip_code),
+                Order.customer.has(Address.district_id == status.order.customer.address.district_id),
                 OrderStatus.status == 1).all()
             for unass_order in unassigned_orders:
                 unass_order.courier_id = p.id

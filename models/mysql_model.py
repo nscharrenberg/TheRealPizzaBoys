@@ -89,7 +89,7 @@ class Address(db.Model):
     street = db.Column(db.String(255), nullable=False)
     house_number = db.Column(db.Integer, nullable=False)
     addition = db.Column(db.String(255), nullable=False)
-    zip_code = db.Column(db.Integer, db.ForeignKey('districts.id'), nullable=False)
+    district_id = db.Column(db.Integer, db.ForeignKey('districts.id'), nullable=False)
     city = db.Column(db.String(255), nullable=False)
     customer = db.relationship('Customer', backref='address', cascade="all, delete")
 
@@ -97,7 +97,7 @@ class Address(db.Model):
         self.street = street
         self.house_number = house_number
         self.addition = addition
-        self.zip_code = zip_code
+        self.district_id = zip_code
         self.city = city
 
 
