@@ -87,7 +87,7 @@ def request_loader(request):
     return user
 
 
-from controllers import menu_controller, add_pizzas, customer_controller
+from controllers import menu_controller, seeder, customer_controller
 
 
 @app.route("/", methods=["GET"])
@@ -276,7 +276,7 @@ def cancel_order():
 
 @app.route("/migrate/seed", methods=["GET"])
 def seed():
-    add_pizzas.add_everything()
+    seeder.add_everything()
     return make_response({"result": "success"}, 200)
 
 
