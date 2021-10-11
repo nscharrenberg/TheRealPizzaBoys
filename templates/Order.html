@@ -138,9 +138,35 @@
           </table>
         </div>
 
+        <h2>Total Price: {{ order.price }}</h2>
+
           <form action="/order" method="post">
+              <div class="u-form-group u-form-discount-code">
+                  <label for="discount_code" class="u-form-control-hidden u-label"></label>
+                  <input type="text" placeholder="Discount code (if you have any)" id="discount_code" name="discount_code" class="u-border-2 u-border-black u-border-no-left u-border-no-right u-border-no-top u-input u-input-rectangle">
+              </div>
+
               <button class="u-btn u-button-style u-hover-palette-1-dark-1 u-palette-1-base u-btn-1">Place Order</button>
           </form>
+
+            <h2>Discount Codes:</h2>
+            <table class="u-table-entity u-table-entity-1">
+            <colgroup>
+              <col width="25%">
+            </colgroup>
+            <thead class="u-palette-4-base u-table-header u-table-header-1">
+              <tr style="height: 21px;">
+                <th class="u-border-1 u-border-palette-4-base u-table-cell">Code</th>
+              </tr>
+            </thead>
+            <tbody class="u-table-body">
+            {% for discount in discounts %}
+              <tr style="height: 75px;">
+                <td class="u-border-1 u-border-grey-30 u-first-column u-grey-5 u-table-cell u-table-cell-5">{{ discount.code }}</td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
       </div>
     </section>
     

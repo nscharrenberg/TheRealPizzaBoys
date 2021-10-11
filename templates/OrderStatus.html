@@ -83,6 +83,13 @@
 
 
         <p>Status: {{ status }}</p>
+
+        <p>
+             Total Price: {{ order.price }}
+             {% if order.discount_id %}
+                (Discounted)
+             {% endif %}
+         </p>
       </div>
     </section>
     <section class="u-align-center u-clearfix u-section-2" id="sec-b807">
@@ -119,6 +126,7 @@
             </tbody>
           </table>
         </div>
+
 
           <form action="/order/cancel" method="post">
               <button class="u-btn u-button-style u-hover-palette-1-dark-1 u-palette-1-base u-btn-1" name="order_id" value="{{ order.id }}">Cancel Order</button>

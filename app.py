@@ -15,15 +15,14 @@ scheduler = APScheduler()
 scheduler.init_app(app)
 scheduler.start()
 
-from models.mysql_model import Order, db, OrderStatus, District, Address, Courier
+from models.mysql_model import Order, db, OrderStatus, District, Address, Courier, Discount
 
 
-@scheduler.task('interval', id='check_if_pizza_goes_out', seconds = 10, misfire_grace_time=900)
+@scheduler.task('interval', id='check_if_pizza_goes_out', seconds=10, misfire_grace_time=900)
 def check_if_pizza_goes_out():
-    current_date = datetime.now() - timedelta(seconds = 30)
+    current_date = datetime.now() - timedelta(seconds=30)
     # Retrieve all orders older then 5 minutes that are still pending for delivery (status 1)
     order_statuses = OrderStatus.query.filter(OrderStatus.ordered_at <= current_date, OrderStatus.status == 1).all()
-
 
     for status in order_statuses:
         if status.order.courier_id is not None:
@@ -31,7 +30,6 @@ def check_if_pizza_goes_out():
             db.session.commit()
         else:
             assign_delivery_person(status)
-
 
 
 @scheduler.task('interval', id='deliver_pizza', minutes=1, misfire_grace_time=900)
@@ -170,7 +168,8 @@ def remove_item_from_card():
 def show_order():
     order = Order.query.filter(Order.customer_id == flask_login.current_user.id,
                                Order.status.has(OrderStatus.status == 0)).first()
-    return render_template("Order.html", order=order)
+    discounts = Discount.query.filter(Discount.user_id == flask_login.current_user.id, Discount.is_used == False).all()
+    return render_template("Order.html", order=order, discounts=discounts)
 
 
 @app.route("/order/confirmation/<order_id>", methods=["GET"])
@@ -269,8 +268,9 @@ def assign_delivery_person(status):
         if orders_for_p is None:
             # they are not busy
             status.order.courier_id = p.id
-            unassigned_orders = Order.query.filter(Order.customer.has(Address.zip_code == status.order.customer.address.zip_code),
-                                                   OrderStatus.status == 1).all()
+            unassigned_orders = Order.query.filter(
+                Order.customer.has(Address.zip_code == status.order.customer.address.zip_code),
+                OrderStatus.status == 1).all()
             for unass_order in unassigned_orders:
                 unass_order.courier_id = p.id
             break
