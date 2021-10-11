@@ -11,7 +11,7 @@ def get_items():
 
 
 def remove_pizza_to_card(customer, pizza):
-    order = Order.query.filter(Order.customer_id == customer.id, Order.status.any(OrderStatus.status == 0)).first()
+    order = Order.query.filter(Order.customer_id == customer.id, Order.status.has(OrderStatus.status == 0)).first()
 
     if order is None:
         return
@@ -30,7 +30,7 @@ def remove_pizza_to_card(customer, pizza):
 
 
 def remove_item_to_card(customer, item):
-    order = Order.query.filter(Order.customer_id == customer.id, Order.status.any(OrderStatus.status == 0)).first()
+    order = Order.query.filter(Order.customer_id == customer.id, Order.status.has(OrderStatus.status == 0)).first()
 
     if order is None:
         return
@@ -49,7 +49,7 @@ def remove_item_to_card(customer, item):
 
 
 def add_pizza_to_card(customer, pizza):
-    order = Order.query.filter(Order.customer_id == customer.id, Order.status.any(OrderStatus.status == 0)).first()
+    order = Order.query.filter(Order.customer_id == customer.id, Order.status.has(OrderStatus.status == 0)).first()
 
     if order is None:
         order_status = OrderStatus(0, datetime.now())
@@ -73,7 +73,7 @@ def add_pizza_to_card(customer, pizza):
 
 
 def add_item_to_card(customer, item):
-    order = Order.query.filter(Order.customer_id == customer.id, Order.status.any(OrderStatus.status == 0)).first()
+    order = Order.query.filter(Order.customer_id == customer.id, Order.status.has(OrderStatus.status == 0)).first()
 
     if order is None:
         order_status = OrderStatus(0, datetime.now())

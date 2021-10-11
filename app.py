@@ -15,23 +15,28 @@ scheduler = APScheduler()
 scheduler.init_app(app)
 scheduler.start()
 
-from models.mysql_model import Order, db, OrderStatus
+from models.mysql_model import Order, db, OrderStatus, District, Address, Courier
 
 
-@scheduler.task('interval', id='check_if_pizza_goes_out', minutes=1, misfire_grace_time=900)
+@scheduler.task('interval', id='check_if_pizza_goes_out', seconds = 10, misfire_grace_time=900)
 def check_if_pizza_goes_out():
-    current_date = datetime.now() - timedelta(minutes=5)
+    current_date = datetime.now() - timedelta(seconds = 30)
     # Retrieve all orders older then 5 minutes that are still pending for delivery (status 1)
     order_statuses = OrderStatus.query.filter(OrderStatus.ordered_at <= current_date, OrderStatus.status == 1).all()
 
+
     for status in order_statuses:
-        status.status = 2
-        db.session.commit()
+        if status.order.courier_id is not None:
+            status.status = 2
+            db.session.commit()
+        else:
+            assign_delivery_person(status)
+
 
 
 @scheduler.task('interval', id='deliver_pizza', minutes=1, misfire_grace_time=900)
 def check_if_pizza_goes_out():
-    current_date = datetime.now() - timedelta(minutes=15)
+    current_date = datetime.now() - timedelta(minutes=1)
 
     order_statuses = OrderStatus.query.filter(OrderStatus.ordered_at <= current_date).all()
 
@@ -164,7 +169,7 @@ def remove_item_from_card():
 @flask_login.login_required
 def show_order():
     order = Order.query.filter(Order.customer_id == flask_login.current_user.id,
-                               Order.status.any(OrderStatus.status == 0)).first()
+                               Order.status.has(OrderStatus.status == 0)).first()
     return render_template("Order.html", order=order)
 
 
@@ -213,9 +218,7 @@ def place_order():
     order_status.status = 1
     order_status.ordered_at = datetime.now()
 
-    # TODO: Find a Courier for the district that is available
-
-    # TODO: Combine 2 orders if they're done within 5 minutes from each other
+    assign_delivery_person(order_status)
 
     db.session.commit()
 
@@ -251,3 +254,23 @@ def logout():
 @login_manager.unauthorized_handler
 def unauthorized_handler():
     return flask.redirect(flask.url_for('login'))
+
+
+def assign_delivery_person(status):
+    # Give order to delivery person
+    customer_address_id = Customer.query.filter(Customer.id == status.order.customer_id).first().address_id
+    customer_zipcode_id = Address.query.filter(Address.id == customer_address_id).first().zip_code
+    print(customer_zipcode_id)
+    # list of all delivery people for the district
+    delivery_people_from_district = Courier.query.filter(Courier.district_id == customer_zipcode_id).all()
+    for p in delivery_people_from_district:
+        # need to check if p available
+        orders_for_p = Order.query.filter(Order.courier_id == p.id, Order.status.has(OrderStatus.status == 2)).first()
+        if orders_for_p is None:
+            # they are not busy
+            status.order.courier_id = p.id
+            unassigned_orders = Order.query.filter(Order.customer.has(Address.zip_code == status.order.customer.address.zip_code),
+                                                   OrderStatus.status == 1).all()
+            for unass_order in unassigned_orders:
+                unass_order.courier_id = p.id
+            break

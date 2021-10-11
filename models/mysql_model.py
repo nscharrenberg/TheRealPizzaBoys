@@ -91,6 +91,7 @@ class Address(db.Model):
     addition = db.Column(db.String(255), nullable=False)
     zip_code = db.Column(db.Integer, db.ForeignKey('districts.id'), nullable=False)
     city = db.Column(db.String(255), nullable=False)
+    customer = db.relationship('Customer', backref='address', cascade="all, delete")
 
     def __init__(self, street, house_number, addition, zip_code, city):
         self.street = street
@@ -105,13 +106,14 @@ class Customer(flask_login.UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     first_name = db.Column(db.String(255), nullable=False)
     last_name = db.Column(db.String(255), nullable=False)
-    phone_number = db.Column(db.Numeric)
+    phone_number = db.Column(db.String(255))
     address_id = db.Column(db.Integer, db.ForeignKey('addresses.id'), nullable=False)
     amount_ordered = db.Column(db.Integer,
                                nullable=False)  # had to add because of reqs, is gonna be increased with every order, if amount%10 = 0, the user get´s a discount code
     discounts = relationship("Discount")
     email = db.Column(db.String(255), nullable=False, primary_key=True)
     password = db.Column(db.String(255), nullable=False)
+    orders = db.relationship('Order', backref='customer', cascade="all, delete")
 
     def __init__(self, first_name, last_name, phone_number, address_id, email, password):
         self.first_name = first_name
@@ -157,6 +159,7 @@ class Order(db.Model):
     pizzas = db.relationship('OrderedPizza', backref='order', cascade="all, delete")
     items = db.relationship('OrderedItem', backref='order', cascade="all, delete")
     status = relationship("OrderStatus", foreign_keys='OrderStatus.order_id', uselist=False, backref=backref("order", uselist=False, cascade="all,delete"))
+
 
     def __init__(self, customer_id, status_id):
         self.customer_id = customer_id

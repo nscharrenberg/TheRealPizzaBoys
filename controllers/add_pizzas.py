@@ -1,20 +1,35 @@
 from flask_sqlalchemy import SQLAlchemy
 
 import app
+from controllers import customer_controller
 from models.mysql_model import Courier, District, Pizza, Topping, Item, db
 from controllers.admin_controller import create_pizza
 
 
 # In this file all the important basis info is inserted into the db
 # only needs to be called once, but nice to have as file if something goes wrong with db
-
 def add_everything():
     add_toppings()
     add_pizzas()
     add_items()
     add_districts()
     add_couriers()
+    add_users()
     db.session.commit()
+
+def add_users():
+    customer_controller.register(first_name="Max",last_name="Mustermann",zip_code="6221",addition="C",
+                                 password="Password",phone_number="+316347273",street="A streed", house_number="112",
+                                 email="max@gmail.com", city="Maastricht")
+    customer_controller.register(first_name="Root", last_name="Root", zip_code="6221", addition="C",
+                                 password="Password", phone_number="+3123674123", street="Rood", house_number="123",
+                                 email="admin", city="Maastricht")
+    customer_controller.register(first_name="Root", last_name="Root", zip_code="6217", addition="C",
+                                 password="Password", phone_number="+3123476123", street="Rood", house_number="123",
+                                 email="noah", city="Maastricht")
+    customer_controller.register(first_name="Root", last_name="Root", zip_code="6216", addition="C",
+                                 password="Password", phone_number="+3146378123", street="Rood", house_number="123",
+                                 email="filip", city="Maastricht")
 
 
 def add_districts():
