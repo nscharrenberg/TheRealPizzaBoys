@@ -93,11 +93,11 @@ class Address(db.Model):
     city = db.Column(db.String(255), nullable=False)
     customer = db.relationship('Customer', backref='address', cascade="all, delete")
 
-    def __init__(self, street, house_number, addition, zip_code, city):
+    def __init__(self, street, house_number, addition, district_id, city):
         self.street = street
         self.house_number = house_number
         self.addition = addition
-        self.district_id = zip_code
+        self.district_id = district_id
         self.city = city
 
 

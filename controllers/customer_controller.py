@@ -35,7 +35,7 @@ def register(first_name, last_name, phone_number, email, password, street, house
         district = found_district
 
     found_address = Address.query.filter_by(street=street, house_number=house_number, addition=addition,
-                                            zip_code=district.id,
+                                            district_id=district.id,
                                             city=city).first()
 
     if found_address is None:
