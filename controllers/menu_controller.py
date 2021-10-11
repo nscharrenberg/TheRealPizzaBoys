@@ -1,4 +1,4 @@
-from models.mysql_model import Pizza, Item, Order, db, OrderStatus, OrderedPizza, OrderedItem
+from models.mysql_model import Pizza, Item, Order, db, OrderStatus, OrderedPizza, OrderedItem, Customer
 from datetime import datetime
 
 
@@ -98,3 +98,16 @@ def add_item_to_card(customer, item):
 
 def create_order():
     pass
+
+def recalculate_price(order_status, user_id):
+    price = 0
+    for pizza in order_status.order.pizzas:
+        price += pizza.price
+        cur = Customer.query.filter(Customer.id == user_id).first()
+        cur.amount_ordered += 1
+
+    for item in order_status.order.items:
+        price += item.price
+
+    order_status.order.price *= price
+

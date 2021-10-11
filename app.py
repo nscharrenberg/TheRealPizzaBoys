@@ -213,6 +213,23 @@ def place_order():
 
     if len(order_status.order.pizzas) < 1:
         return flask.redirect('/order')
+    print("Test")
+    discount_code = request.form['discount_code']
+    dc = Discount.query.filter(Discount.code == discount_code).first()
+
+    price = 0
+    for pizza in order_status.order.pizzas:
+        price += pizza.price
+        cur = Customer.query.filter(Customer.id == flask_login.current_user.id).first()
+        cur.amount_ordered += 1
+
+    for item in order_status.order.items:
+        price += item.price
+
+    order_status.order.price *= price
+    if dc is not None and not dc.is_used:
+        order_status.order.discount_code = discount_code
+        order_status.order.price *= .9
 
     order_status.status = 1
     order_status.ordered_at = datetime.now()
