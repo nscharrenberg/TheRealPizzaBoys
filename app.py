@@ -15,7 +15,7 @@ scheduler = APScheduler()
 scheduler.init_app(app)
 scheduler.start()
 
-from models.sqlite_model import Order, db, OrderStatus
+from models.mysql_model import Order, db, OrderStatus
 
 
 @scheduler.task('interval', id='check_if_pizza_goes_out', minutes=1, misfire_grace_time=900)
@@ -55,7 +55,7 @@ def remove_old_unordered_orders():
         db.session.commit()
 
 
-from models.sqlite_model import Customer
+from models.mysql_model import Customer
 
 
 @login_manager.user_loader

@@ -1,4 +1,4 @@
-from models.sqlite_model import Pizza, db, PizzaTopping
+from models.mysql_model import Pizza, db, PizzaTopping
 
 
 def create_pizza(name, toppings):

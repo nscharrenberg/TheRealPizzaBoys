@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 
 import app
-from models.sqlite_model import Courier, District, Pizza, Topping, Item, db
+from models.mysql_model import Courier, District, Pizza, Topping, Item, db
 from controllers.admin_controller import create_pizza
 
 

@@ -1,5 +1,5 @@
 import app
-from models.sqlite_model import Pizza, Item, Customer, Address, db, District
+from models.mysql_model import Pizza, Item, Customer, Address, db, District
 import bcrypt
 
 salt = '$2a$06$4zWV0r6LQyLbmPIaLY7dde'.encode('utf-8')

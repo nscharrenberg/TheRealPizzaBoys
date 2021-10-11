@@ -1,4 +1,4 @@
-from models.sqlite_model import Pizza, Item, Order, db, OrderStatus, OrderedPizza, OrderedItem
+from models.mysql_model import Pizza, Item, Order, db, OrderStatus, OrderedPizza, OrderedItem
 from datetime import datetime
 
 
