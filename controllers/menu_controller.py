@@ -26,6 +26,8 @@ def remove_pizza_to_card(customer, pizza):
         db.session.commit()
 
     order_pizza.quantity = order_pizza.quantity - 1
+    order_status = order.status
+    recalculate_price(order_status=order_status, user_id=customer.id)
     db.session.commit()
 
 
@@ -45,12 +47,13 @@ def remove_item_to_card(customer, item):
         db.session.commit()
 
     order_item.quantity = order_item.quantity - 1
+    order_status = order.status
+    recalculate_price(order_status=order_status, user_id=customer.id)
     db.session.commit()
 
 
 def add_pizza_to_card(customer, pizza):
     order = Order.query.filter(Order.customer_id == customer.id, Order.status.has(OrderStatus.status == 0)).first()
-
     if order is None:
         order_status = OrderStatus(0, datetime.now())
         db.session.add(order_status)
@@ -61,6 +64,8 @@ def add_pizza_to_card(customer, pizza):
         order_status.order_id = order.id
         db.session.commit()
 
+    order_status = order.status
+    recalculate_price(order_status=order_status,user_id= customer.id)
     order_pizza = OrderedPizza.query.filter_by(pizza_id=pizza, order_id=order.id).first()
 
     if order_pizza is None:
@@ -85,6 +90,8 @@ def add_item_to_card(customer, item):
         order_status.order_id = order.id
         db.session.commit()
 
+    order_status = order.status
+    recalculate_price(order_status=order_status, user_id=customer.id)
     order_item = OrderedItem.query.filter_by(item_id=item, order_id=order.id).first()
 
     if order_item is None:
