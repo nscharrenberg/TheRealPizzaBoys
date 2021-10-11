@@ -1,4 +1,3 @@
-import app
 from models.mysql_model import Pizza, Item, Customer, Address, db, District
 import bcrypt
 
