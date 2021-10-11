@@ -72,9 +72,19 @@
         </nav>
       </div></header>
     <section class="u-clearfix u-section-1" id="sec-576d">
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+              <h2>Message(s):</h2>
+            <ul class=flashes>
+            {% for message in messages %}
+              <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
       <div class="u-clearfix u-sheet u-sheet-1">
         <div class="u-expanded-width u-form u-form-1">
-          <form action="/register" method="POST" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" name="form-3" style="padding: 10px;">
+          <form action="/register" method="POST" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" name="form-1" style="padding: 10px;">
             <div class="u-form-group u-form-name">
               <label for="first-name-99ea" class="u-form-control-hidden u-label"></label>
               <input type="text" placeholder="First Name" id="first-name-99ea" name="first_name" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="">
@@ -125,10 +135,10 @@
               <input type="text" placeholder="City" id="city-99ea" name="city" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white" required="">
             </div>
 
-            <div class="u-align-left u-form-group u-form-submit">
-              <a href="#" class="u-btn u-btn-submit u-button-style">Submit</a>
-              <input type="submit" value="submit" class="u-form-control-hidden">
-            </div>
+            <div class="u-align-center u-form-group u-form-submit">
+                        <a href="#" class="u-active-palette-1-light-1 u-border-none u-btn u-btn-round u-btn-submit u-button-style u-hover-palette-1-light-1 u-palette-1-base u-radius-50 u-text-body-alt-color u-btn-1">Register</a>
+                        <input type="submit" value="submit" class="u-form-control-hidden">
+                      </div>
             <input type="hidden" value="" name="recaptchaResponse">
           </form>
         </div>

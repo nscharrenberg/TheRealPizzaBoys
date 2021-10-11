@@ -2,7 +2,7 @@ import decimal
 
 import flask
 import flask_login
-from flask import Flask, render_template, make_response, request
+from flask import Flask, render_template, make_response, request, flash
 from flask_apscheduler import APScheduler
 from datetime import datetime, timedelta
 
@@ -112,9 +112,10 @@ def login():
                                              request.form['password'])
 
         flask_login.login_user(customer)
-        return flask.redirect('/menu')
+        return flask.redirect(flask.url_for('show_menu'))
     except Exception as ex:
-        return make_response(ex, 500)
+        flash(str(ex))
+        return flask.redirect(flask.url_for('login_screen'))
 
 
 @app.route("/register", methods=["GET"])
@@ -124,15 +125,21 @@ def register_screen():
 
 @app.route("/register", methods=["POST"])
 def register():
-    customer_controller.register(request.form['first_name'], request.form['last_name'],
-                                 request.form['phone_number'],
-                                 request.form['email'],
-                                 request.form['password'], request.form['street'],
-                                 request.form['house_number'],
-                                 request.form['addition'], request.form['zipcode'],
-                                 request.form['city'])
+    try:
+        customer_controller.register(request.form['first_name'], request.form['last_name'],
+                                     request.form['phone_number'],
+                                     request.form['email'],
+                                     request.form['password'], request.form['street'],
+                                     request.form['house_number'],
+                                     request.form['addition'], request.form['zipcode'],
+                                     request.form['city'])
 
-    return flask.redirect('/menu')
+        flash("Account has been created! You can now login")
+
+        return flask.redirect(flask.url_for('home'))
+    except Exception as ex:
+        flash(str(ex))
+        return flask.redirect(flask.url_for('register_screen'))
 
 
 @app.route("/menu", methods=["GET"])
@@ -144,28 +151,28 @@ def show_menu():
 @flask_login.login_required
 def add_pizza_to_card():
     menu_controller.add_pizza_to_card(flask_login.current_user, request.form['pizza_id'])
-    return flask.redirect('menu')
+    return flask.redirect(flask.url_for('show_menu'))
 
 
 @app.route("/card-pizza-delete", methods=["POST"])
 @flask_login.login_required
 def remove_pizza_from_card():
     menu_controller.remove_pizza_to_card(flask_login.current_user, request.form['pizza_id'])
-    return flask.redirect('menu')
+    return flask.redirect(flask.url_for('show_menu'))
 
 
 @app.route("/card-item-add", methods=["POST"])
 @flask_login.login_required
 def add_item_to_card():
     menu_controller.add_item_to_card(flask_login.current_user, request.form['item_id'])
-    return flask.redirect('menu')
+    return flask.redirect(flask.url_for('show_menu'))
 
 
 @app.route("/card-item-delete", methods=["POST"])
 @flask_login.login_required
 def remove_item_from_card():
     menu_controller.remove_item_to_card(flask_login.current_user, request.form['item_id'])
-    return flask.redirect('menu')
+    return flask.redirect(flask.url_for('show_menu'))
 
 
 @app.route("/order", methods=["GET"])
@@ -214,10 +221,13 @@ def place_order():
         Order.customer_id == flask_login.current_user.id)).first()
 
     if order_status.order.pizzas is None:
-        return flask.redirect('/order')
+        flash("Order must have at least one pizza!")
+        return flask.redirect(flask.url_for('show_order'))
 
     if len(order_status.order.pizzas) < 1:
-        return flask.redirect('/order')
+        flash("Order must have at least one pizza!")
+        return flask.redirect(flask.url_for('show_order'))
+
     discount_code = request.form['discount_code']
     dc = Discount.query.filter(Discount.code == discount_code).first()
     cur = Customer.query.filter(Customer.id == flask_login.current_user.id).first()
@@ -243,7 +253,8 @@ def place_order():
 
     db.session.commit()
 
-    return flask.redirect('/order/confirmation/' + str(order_status.order_id))
+    flash("Order has been placed.")
+    return flask.redirect(flask.url_for('show_order_confirm', order_id=str(order_status.order_id)))
 
 
 @app.route("/order/cancel", methods=["POST"])
@@ -256,8 +267,11 @@ def cancel_order():
     if order_status is not None:
         order_status.status = 4
         db.session.commit()
+        flash("Order has been cancelled")
+    else:
+        flash("Unable to cancel order as 5 minutes have passed")
 
-    return flask.redirect(flask.url_for('show_order'))
+    return flask.redirect(flask.url_for('show_order_confirm', order_id=str(order_id)))
 
 
 @app.route("/migrate/seed", methods=["GET"])
@@ -281,6 +295,7 @@ def logout():
 
 @login_manager.unauthorized_handler
 def unauthorized_handler():
+    flash("You must be logged in to perform this action!")
     return flask.redirect(flask.url_for('login'))
 
 
