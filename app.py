@@ -21,12 +21,9 @@ scheduler.start()
 
 from models.mysql_model import Order, db, OrderStatus, Address, Courier, Discount
 
-DELIVERY_TIME = 30
-
-
 @scheduler.task('interval', id='check_if_pizza_goes_out', seconds=10, misfire_grace_time=900)
 def check_if_pizza_goes_out():
-    current_date = datetime.now() - timedelta(seconds=DELIVERY_TIME)
+    current_date = datetime.now() - timedelta(minutes=5)
     # Retrieve all orders older then 5 minutes that are still pending for delivery (status 1)
     order_statuses = OrderStatus.query.filter(OrderStatus.ordered_at <= current_date, OrderStatus.status == 1).all()
 
@@ -39,8 +36,8 @@ def check_if_pizza_goes_out():
 
 
 @scheduler.task('interval', id='deliver_pizza', minutes=1, misfire_grace_time=900)
-def check_if_pizza_goes_out():
-    current_date = datetime.now() - timedelta(minutes=1)
+def check_if_pizz_delivered():
+    current_date = datetime.now() - timedelta(minutes=15)
 
     order_statuses = OrderStatus.query.filter(OrderStatus.ordered_at <= current_date).all()
 
@@ -51,7 +48,7 @@ def check_if_pizza_goes_out():
 
 @scheduler.task('interval', id='remove_old_unordered_orders', minutes=1, misfire_grace_time=900)
 def remove_old_unordered_orders():
-    current_date = datetime.now() - timedelta(minutes=15)
+    current_date = datetime.now() - timedelta(minutes=30)
 
     # Retrieve all orders older then 15 minutes that have not been officially ordered yet. (status 0)
     order_statuses = OrderStatus.query.filter(OrderStatus.created_at <= current_date, OrderStatus.status == 0).all()
@@ -264,7 +261,7 @@ def cancel_order():
     order_id = request.form['order_id']
     # check if order was placed less than 5 minutes ago
     current_date = datetime.now()
-    order_status = OrderStatus.query.filter(OrderStatus.ordered_at + timedelta(seconds=DELIVERY_TIME) >= current_date,
+    order_status = OrderStatus.query.filter(OrderStatus.ordered_at + timedelta(minutes=5) >= current_date,
                                             OrderStatus.order_id == order_id).first()
     if order_status is not None:
         order_status.status = 4
