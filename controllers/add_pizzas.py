@@ -2,7 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 import app
 from controllers import customer_controller
-from models.mysql_model import Courier, District, Pizza, Topping, Item, db
+from models.mysql_model import Courier, District, Pizza, Topping, Item, db, Customer
 from controllers.admin_controller import create_pizza
 
 
@@ -30,6 +30,9 @@ def add_users():
     customer_controller.register(first_name="Root", last_name="Root", zip_code="6216", addition="C",
                                  password="Password", phone_number="+3146378123", street="Rood", house_number="123",
                                  email="filip", city="Maastricht")
+    db.session.commit()
+    admin = Customer.query.filter(Customer.id == 1)
+    admin.amount_ordered = 50
 
 
 def add_districts():

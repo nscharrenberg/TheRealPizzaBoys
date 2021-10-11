@@ -1,8 +1,13 @@
+import decimal
+
 import flask
 import flask_login
 from flask import Flask, render_template, make_response, request
 from flask_apscheduler import APScheduler
 from datetime import datetime, timedelta
+
+from sqlalchemy import func
+from sqlalchemy.orm import session
 
 app = Flask(__name__)
 app.secret_key = 'topsecretkeythatonlyweknow'  # would usually store this as an environmental variable
@@ -15,7 +20,7 @@ scheduler = APScheduler()
 scheduler.init_app(app)
 scheduler.start()
 
-from models.mysql_model import Order, db, OrderStatus, District, Address, Courier, Discount
+from models.mysql_model import Order, db, OrderStatus, District, Address, Courier, Discount, Pizza
 
 
 @scheduler.task('interval', id='check_if_pizza_goes_out', seconds=10, misfire_grace_time=900)
@@ -50,7 +55,7 @@ def remove_old_unordered_orders():
     # Retrieve all orders older then 15 minutes that have not been officially ordered yet. (status 0)
     order_statuses = OrderStatus.query.filter(OrderStatus.created_at <= current_date, OrderStatus.status == 0).all()
 
-    if order_statuses is None:
+    if bool(order_statuses):
         return
 
     for status in order_statuses:
@@ -213,23 +218,23 @@ def place_order():
 
     if len(order_status.order.pizzas) < 1:
         return flask.redirect('/order')
-    print("Test")
     discount_code = request.form['discount_code']
     dc = Discount.query.filter(Discount.code == discount_code).first()
-
-    price = 0
+    cur = Customer.query.filter(Customer.id == flask_login.current_user.id).first()
+    # add ordered pizza to be eligible for discount codes
     for pizza in order_status.order.pizzas:
-        price += pizza.price
-        cur = Customer.query.filter(Customer.id == flask_login.current_user.id).first()
-        cur.amount_ordered += 1
+        cur.amount_ordered += 1 * pizza.quantity
 
-    for item in order_status.order.items:
-        price += item.price
+    # receive discount
+    while cur.amount_ordered > 10:
+        create_discount_code(flask_login.current_user.id)
+        cur.amount_ordered -= 10
 
-    order_status.order.price *= price
+    # discount price
     if dc is not None and not dc.is_used:
         order_status.order.discount_code = discount_code
-        order_status.order.price *= .9
+        dc.is_used = True
+        order_status.order.price *= decimal.Decimal(0.9)
 
     order_status.status = 1
     order_status.ordered_at = datetime.now()
@@ -276,7 +281,6 @@ def assign_delivery_person(status):
     # Give order to delivery person
     customer_address_id = Customer.query.filter(Customer.id == status.order.customer_id).first().address_id
     customer_zipcode_id = Address.query.filter(Address.id == customer_address_id).first().zip_code
-    print(customer_zipcode_id)
     # list of all delivery people for the district
     delivery_people_from_district = Courier.query.filter(Courier.district_id == customer_zipcode_id).all()
     for p in delivery_people_from_district:
@@ -291,3 +295,18 @@ def assign_delivery_person(status):
             for unass_order in unassigned_orders:
                 unass_order.courier_id = p.id
             break
+
+    db.session.commit()
+
+
+def create_discount_code(id):
+    max = 3267132
+    highest_discount = db.session.query(func.max(Discount.id))
+    if highest_discount.scalar() is None:
+        highest_discount_id = 0
+    else:
+        highest_discount_id = highest_discount.scalar() + 1
+    to_hex = max - highest_discount_id
+    hexed = hex(to_hex)
+    db.session.add(Discount(user_id=id, code=hexed))
+    db.session.commit()

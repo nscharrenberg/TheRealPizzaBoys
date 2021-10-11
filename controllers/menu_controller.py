@@ -1,4 +1,4 @@
-from models.mysql_model import Pizza, Item, Order, db, OrderStatus, OrderedPizza, OrderedItem, Customer
+from models.mysql_model import Pizza, Item, Order, db, OrderStatus, OrderedPizza, OrderedItem, Customer, Discount
 from datetime import datetime
 
 
@@ -27,7 +27,7 @@ def remove_pizza_to_card(customer, pizza):
 
     order_pizza.quantity = order_pizza.quantity - 1
     order_status = order.status
-    recalculate_price(order_status=order_status, user_id=customer.id)
+    recalculate_price(user_id=customer.id)
     db.session.commit()
 
 
@@ -48,7 +48,7 @@ def remove_item_to_card(customer, item):
 
     order_item.quantity = order_item.quantity - 1
     order_status = order.status
-    recalculate_price(order_status=order_status, user_id=customer.id)
+    recalculate_price(user_id=customer.id)
     db.session.commit()
 
 
@@ -65,7 +65,6 @@ def add_pizza_to_card(customer, pizza):
         db.session.commit()
 
     order_status = order.status
-    recalculate_price(order_status=order_status,user_id= customer.id)
     order_pizza = OrderedPizza.query.filter_by(pizza_id=pizza, order_id=order.id).first()
 
     if order_pizza is None:
@@ -74,6 +73,7 @@ def add_pizza_to_card(customer, pizza):
     else:
         order_pizza.quantity = order_pizza.quantity + 1
 
+    recalculate_price(user_id= customer.id)
     db.session.commit()
 
 
@@ -91,7 +91,6 @@ def add_item_to_card(customer, item):
         db.session.commit()
 
     order_status = order.status
-    recalculate_price(order_status=order_status, user_id=customer.id)
     order_item = OrderedItem.query.filter_by(item_id=item, order_id=order.id).first()
 
     if order_item is None:
@@ -100,21 +99,28 @@ def add_item_to_card(customer, item):
     else:
         order_item.quantity = order_item.quantity + 1
 
+    recalculate_price(user_id=customer.id)
     db.session.commit()
 
 
 def create_order():
     pass
 
-def recalculate_price(order_status, user_id):
+
+
+def recalculate_price(user_id):
+    order = Order.query.filter(Order.customer_id == user_id, Order.status.has(OrderStatus.status == 0)).first()
+    order_status = order.status
     price = 0
     for pizza in order_status.order.pizzas:
-        price += pizza.price
-        cur = Customer.query.filter(Customer.id == user_id).first()
-        cur.amount_ordered += 1
+        print(pizza.pizza_id)
+        print(pizza.quantity)
+        actual_pizza = Pizza.query.filter(Pizza.id == pizza.pizza_id).first()
+        price += actual_pizza.price * pizza.quantity
 
     for item in order_status.order.items:
-        price += item.price
-
-    order_status.order.price *= price
+        actual_item = Item.query.filter(Item.id == item.item_id).first()
+        price += actual_item.price * item.quantity
+    order.price = price
+    db.session.commit()
 

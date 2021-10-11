@@ -143,9 +143,9 @@ class Discount(db.Model):
     is_used = db.Column(db.Boolean, default=False)
     user_id = db.Column(db.Integer, ForeignKey('customers.id'))
 
-    def __init__(self, code, is_used, user_id):
+    def __init__(self, code, user_id):
         self.code = code
-        self.is_used = is_used
+        self.is_used = False
         self.user_id = user_id
 
 
@@ -159,13 +159,14 @@ class Order(db.Model):
     pizzas = db.relationship('OrderedPizza', backref='order', cascade="all, delete")
     items = db.relationship('OrderedItem', backref='order', cascade="all, delete")
     status = relationship("OrderStatus", foreign_keys='OrderStatus.order_id', uselist=False, backref=backref("order", uselist=False, cascade="all,delete"))
-    price = 0;
+    price = db.Column(db.Numeric(10, 2), default=0.00);
 
     def __init__(self, customer_id, status_id):
         self.customer_id = customer_id
         self.courier_id = None
         self.status_id = status_id
         self.discount_code = None
+        self.price = 0
 
 
 class Item(db.Model):
