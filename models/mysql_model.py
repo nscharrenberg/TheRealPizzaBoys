@@ -159,7 +159,7 @@ class Order(db.Model):
     pizzas = db.relationship('OrderedPizza', backref='order', cascade="all, delete")
     items = db.relationship('OrderedItem', backref='order', cascade="all, delete")
     status = relationship("OrderStatus", foreign_keys='OrderStatus.order_id', uselist=False, backref=backref("order", uselist=False, cascade="all,delete"))
-
+    price = 0;
 
     def __init__(self, customer_id, status_id):
         self.customer_id = customer_id
