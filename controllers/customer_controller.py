@@ -12,7 +12,7 @@ def login(email, password):
         raise Exception("Customer does not exist")
 
     # should actually use the checkpw function but seems to always retturn false, waste of time atm to work on it.
-    if bcrypt.hashpw(password.encode('utf-8'), salt) == found.password.encode('utf-8') is False:
+    if (bcrypt.hashpw(password.encode('utf-8'), salt) == found.password.encode('utf-8')) is False:
         raise Exception("Invalid Credentials")
 
     return found
