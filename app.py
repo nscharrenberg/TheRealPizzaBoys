@@ -7,7 +7,6 @@ from flask_apscheduler import APScheduler
 from datetime import datetime, timedelta
 
 from sqlalchemy import func
-from sqlalchemy.orm import session
 
 app = Flask(__name__)
 app.secret_key = 'topsecretkeythatonlyweknow'  # would usually store this as an environmental variable
@@ -20,9 +19,11 @@ scheduler = APScheduler()
 scheduler.init_app(app)
 scheduler.start()
 
-from models.mysql_model import Order, db, OrderStatus, District, Address, Courier, Discount, Pizza
+from models.mysql_model import Order, db, OrderStatus, Address, Courier, Discount
 
 DELIVERY_TIME = 30
+
+
 @scheduler.task('interval', id='check_if_pizza_goes_out', seconds=10, misfire_grace_time=900)
 def check_if_pizza_goes_out():
     current_date = datetime.now() - timedelta(seconds=DELIVERY_TIME)
@@ -263,7 +264,8 @@ def cancel_order():
     order_id = request.form['order_id']
     # check if order was placed less than 5 minutes ago
     current_date = datetime.now()
-    order_status = OrderStatus.query.filter(OrderStatus.ordered_at + timedelta(seconds=DELIVERY_TIME) >= current_date, OrderStatus.order_id == order_id).first()
+    order_status = OrderStatus.query.filter(OrderStatus.ordered_at + timedelta(seconds=DELIVERY_TIME) >= current_date,
+                                            OrderStatus.order_id == order_id).first()
     if order_status is not None:
         order_status.status = 4
         db.session.commit()
